@@ -1,5 +1,8 @@
 # Userspace driver for the G13
 
+## Overview
+This is a fork of [ecraven's g13 driver](https://github.com/ecraven/g13). It's being upgraded to use CMake and a GUI (hopefully) to easily modify profiles while running. Some ideas were also taken from [khampf's](https://github.com/khampf/g13) fork as well.
+
 ## Installation
 
 Make sure you have boost and libusb-1.0 installed.

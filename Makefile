@@ -3,29 +3,29 @@ all: g13d pbm2lpbm
 FLAGS=$(CXXFLAGS) -DBOOST_LOG_DYN_LINK -std=c++0x
 LIBS=-lusb-1.0 -lboost_log -lboost_log_setup-mt -lboost_thread -lboost_system-mt -lpthread
 
-g13.o: g13.h helper.hpp g13.cc
+g13.o: src/main/g13.h src/main/helper.h src/main/g13.cc
 	g++ $(FLAGS) -c g13.cc
 
-g13_main.o: g13.h helper.hpp g13_main.cc
+g13_main.o: src/main/g13.h src/main/helper.h src/main/g13_main.cc
 	g++ $(FLAGS) -c g13_main.cc
 
 
-g13_log.o: g13.h helper.hpp g13_log.cc
+g13_log.o: src/main/g13.h src/main/helper.h src/main/g13_log.cc
 	g++ $(FLAGS) -c g13_log.cc
 
-g13_fonts.o: g13.h helper.hpp g13_fonts.cc
+g13_fonts.o: src/main/g13.h src/main/helper.h src/main/g13_fonts.cc
 	g++ $(FLAGS) -c g13_fonts.cc
 
-g13_lcd.o: g13.h helper.hpp g13_lcd.cc
+g13_lcd.o: src/main/g13.h src/main/helper.h src/main/g13_lcd.cc
 	g++ $(FLAGS) -c g13_lcd.cc
 
-g13_stick.o: g13.h helper.hpp g13_stick.cc
+g13_stick.o: src/main/g13.h src/main/helper.h src/main/g13_stick.cc
 	g++ $(FLAGS) -c g13_stick.cc
 	
-g13_keys.o: g13.h helper.hpp g13_keys.cc
+g13_keys.o: src/main/g13.h src/main/helper.h src/main/g13_keys.cc
 	g++ $(FLAGS) -c g13_keys.cc
 
-helper.o: helper.hpp helper.cpp
+helper.o: src/main/helper.h src/main/helper.cc
 	g++ $(FLAGS) -c helper.cpp
 	
 	
@@ -36,7 +36,7 @@ g13d: g13_main.o g13.o g13_log.o g13_fonts.o g13_lcd.o g13_stick.o g13_keys.o he
 	 	-lboost_log    \
 	 	-lboost_system -lpthread
 
-pbm2lpbm: pbm2lpbm.c
+pbm2lpbm: src/pbm2lpbm/pbm2lpbm.cc
 	g++ -o pbm2lpbm pbm2lpbm.c
 
 package:
@@ -46,4 +46,4 @@ package:
 	tar cjf g13-userspace.tbz2 g13-userspace
 	rm -Rf g13-userspace
 clean: 
-	rm -f g13 pbm2lpbm
+	rm -f g13d pbm2lpbm

@@ -178,6 +178,8 @@ STREAM_T &operator <<( STREAM_T &o, const _map_keys_out<MAP_T> &_mko ) {
 			o << _mko.sep << i->first;
 		}
 	}
+
+    return o;
 };
 
 template <class MAP_T>
