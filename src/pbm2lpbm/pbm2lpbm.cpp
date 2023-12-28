@@ -1,6 +1,5 @@
 #include <iostream>
-#include <string>
-#include <string.h>
+#include <cstring>
 #include <cstdio>
 using namespace std;
 // convert a .pbm raw file to our custom .lpbm format

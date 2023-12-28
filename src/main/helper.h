@@ -77,8 +77,8 @@ public:
 	const char *what() throw ();
 };
 
-template <class KEY_T, class VAL_T>
-inline const VAL_T &find_or_throw( const std::map<KEY_T,VAL_T> &m, const KEY_T &target ) {
+template <class KEY_TEMP, class VAL_T>
+inline const VAL_T &find_or_throw( const std::map<KEY_TEMP,VAL_T> &m, const KEY_TEMP &target ) {
 	auto i = m.find( target );
 	if( i == m.end() ) {
 		throw NotFoundException();
@@ -86,15 +86,14 @@ inline const VAL_T &find_or_throw( const std::map<KEY_T,VAL_T> &m, const KEY_T &
 	return i->second;
 };
 
-template <class KEY_T, class VAL_T>
-inline VAL_T &find_or_throw( std::map<KEY_T,VAL_T> &m, const KEY_T &target ) {
+template <class KEY_TEMP, class VAL_T>
+inline VAL_T &find_or_throw( std::map<KEY_TEMP,VAL_T> &m, const KEY_TEMP &target ) {
 	auto i = m.find( target );
 	if( i == m.end() ) {
 		throw NotFoundException();
 	}
 	return i->second;
 };
-
 
 // *************************************************************************
 
@@ -113,7 +112,6 @@ std::ostream &operator<<( std::ostream &o, const Coord<T> &c ) {
 	o << "{ " << c.x << " x " << c.y << " }";
 	return o;
 };
-
 
 template <class T>
 class Bounds {
@@ -166,7 +164,6 @@ struct _map_keys_out {
 	std::string sep;
 };
 
-
 template <class STREAM_T, class MAP_T>
 STREAM_T &operator <<( STREAM_T &o, const _map_keys_out<MAP_T> &_mko ) {
 	bool first = true;
@@ -190,9 +187,4 @@ _map_keys_out<MAP_T> map_keys_out( const MAP_T &c, const std::string &sep = " " 
 // *************************************************************************
 
 }; // namespace Helper
-
-
-// *************************************************************************
-
-
 #endif // __HELPER_HPP__
