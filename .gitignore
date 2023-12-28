@@ -1,7 +1,11 @@
-/g13d
+# IDE settings
+.idea
 .cproject
 .project
 .pydevproject
-*.o
-pbm2lpbm
 .settings/*
+
+# Build files
+cmake-build-debug
+/g13d
+*.o
