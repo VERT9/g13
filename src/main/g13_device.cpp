@@ -368,7 +368,7 @@ namespace G13 {
 			_id_within_manager(_id),
 			_uinput_fid(-1),
 			ctx(0) {
-		_current_profile = ProfilePtr(new G13_Profile(*this, "default"));
+		_current_profile = ProfilePtr(new G13_Profile(*this, "default", "default"));
 		_profiles["default"] = _current_profile;
 
 		for (int i = 0; i < sizeof(keys); i++)
@@ -392,14 +392,17 @@ namespace G13 {
 	}
 
 	void G13_Device::switch_to_profile(const std::string& name) {
-		_current_profile = profile(name);
+		if (_current_profile->name() != name){
+			_current_profile = profile(name);
+			_logger.info("Profile switched to: " + name);
+		}
 	}
 
-	ProfilePtr G13_Device::profile(const std::string& name) {
-		ProfilePtr rv = _profiles[name];
+	ProfilePtr G13_Device::profile(const std::string& id, const std::string& name) {
+		ProfilePtr rv = _profiles[id];
 		if (!rv) {
-			rv = ProfilePtr(new G13_Profile(*_current_profile, name));
-			_profiles[name] = rv;
+			rv = ProfilePtr(new G13_Profile(*_current_profile, id, name.empty() ? id : name));
+			_profiles[id] = rv;
 		}
 		return rv;
 	}
