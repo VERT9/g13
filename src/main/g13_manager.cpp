@@ -4,6 +4,10 @@
 
 #include "helper.h"
 #include <csignal>
+#include <format>
+#include <wordexp.h>
+#include <filesystem>
+#include <set>
 
 #include <linux/input.h>
 #include <boost/log/core/core.hpp>
@@ -13,6 +17,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup.hpp>
 #include <boost/log/utility/setup/console.hpp>
+#include <pugixml.hpp>
 
 #include "g13_manager.h"
 #include "g13_device.h"
@@ -156,14 +161,31 @@ namespace G13 {
 			g13s[0]->read_config_file(config_fn);
 		}
 
+		init_profiles();
+
 		do {
-			if (g13s.size() > 0)
-				for (int i = 0; i < g13s.size(); i++) {
-					int status = g13s[i]->read_keys();
-					g13s[i]->read_commands();
+			if (!g13s.empty()) {
+
+				for (auto & g13 : g13s) {
+					// TODO allow for other LCD apps to run
+					g13->lcd().image_clear();
+					// Write current date/time to screen
+					std::time_t t = std::time(nullptr);
+					char mbstr[100];
+					std::strftime(mbstr, sizeof(mbstr), "%F %I:%M:%S", std::localtime(&t));
+					g13->lcd().write_pos(3, 0);
+					g13->lcd().write_string(mbstr);
+
+					// Write current profile name to screen
+					g13->lcd().write_pos(0, 0);
+					g13->lcd().write_string(g13->current_profile().name().c_str());
+
+					int status = g13->read_keys();
+					g13->read_commands();
 					if (status < 0)
 						running = false;
 				}
+			}
 		}
 		while (running);
 		cleanup();
@@ -246,6 +268,133 @@ namespace G13 {
 
 		G13_OUT("Known keys to map to:");
 		G13_OUT(Helper::map_keys_out(input_name_to_key));
+	}
+
+	void G13_Manager::load_profile(G13_Device* device, const std::string& filename) {
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(filename.c_str());
+		if (!result) {
+			_logger.warning(std::string ("Profile can not be read: ").append(filename));
+			return;
+		}
+
+		std::string name = doc.select_node("/profiles/profile").node().attribute("name").value();
+		std::string guid = doc.select_node("/profiles/profile").node().attribute("guid").value();
+		_logger.info(std::format("{}: {}", guid, name));
+		ProfilePtr profile = device->profile(guid, name);
+
+		pugi::xpath_node_set assignments = doc.select_nodes("/profiles/profile/assignments[@devicecategory='Logitech.Gaming.LeftHandedController']/assignment[@backup='false']");
+
+		for (auto node : assignments) {
+			// Find G Key
+			std::string keyname = node.node().attribute("contextid").value();
+			// TODO stick zones are dynamic and troublesome for this
+			// keymap for converting from Logitech -> g13/key
+			std::map<std::string, std::string> gkey_convert_map = {
+					{"G23", "LEFT"},
+					{"G24", "DOWN"},
+					{"G25", "TOP"},
+					{"G26", "STICK_UP"},
+					{"G27", "STICK_RIGHT"},
+					{"G28", "STICK_DOWN"},
+					{"G29", "STICK_LEFT"}
+			};
+			if (gkey_convert_map.count(keyname) > 0)
+				keyname = gkey_convert_map.at(keyname);
+
+			// Find Keystroke
+			// keymap for converting from Logitech -> linux/input
+			std::map<std::string, std::string> key_convert_map = {
+					{"SPACEBAR", "SPACE"},
+					{"LSHIFT", "LEFTSHIFT"},
+					{"RSHIFT", "RIGHTSHIFT"},
+					{"LCTRL", "LEFTCTRL"},
+					{"RCTRL", "RIGHTCTRL"},
+					{"LALT", "LEFTALT"},
+					{"RALT", "RIGHTALT"},
+					{"LBRACKET", "LEFTBRACE"},
+					{"RBRACKET", "RIGHTBRACE"},
+					{"ESCAPE", "ESC"}
+			};
+
+			// TODO handle key direction and timings
+			// Get macro from XML
+			std::string macroguid = node.node().attribute("macroguid").value();
+			std::string macro_query = "/profiles/profile/macros/macro[@guid='"+macroguid+"']";
+			pugi::xpath_node_set macro = doc.select_nodes(macro_query.c_str());
+
+			std::string action;
+			for(auto keyset : macro) {
+				// Check for support: only multikey and keystroke elements for now
+				auto keys = keyset.node().first_child();
+				if (strcmp(keys.name(), "multikey") != 0 and strcmp(keys.name(), "keystroke") != 0) {
+					_logger.warning(std::format("Macro not supported: {}", keys.name()));
+					continue;
+				}
+
+				// Gather unique keys only
+				std::set<std::string> unique_keys;
+				for (auto keystroke : keys.children("key")) {
+					// Extract value and add to set
+					unique_keys.emplace(keystroke.attribute("value").value());
+				}
+
+				// Build action
+				for (auto key : unique_keys) {
+					// Convert if necessary
+					if (key_convert_map.count(key) > 0)
+						key = key_convert_map.at(key);
+
+					// Add prefix
+					key.insert(0, "KEY_");
+
+					// Add operator
+					if (!action.empty())
+						action += "+";
+
+					// Add keystroke
+					action += key;
+				}
+			}
+
+			// Bind keys to actions
+			try {
+				if (auto key = profile->find_key(keyname)) {
+					key->set_action(device->make_action(action));
+				} else if (auto stick_key = device->stick().zone(keyname)) {
+					stick_key->set_action(device->make_action(action));
+				} else {
+					_logger.warning("bind key " + keyname + " unknown");
+				}
+				_logger.trace(std::format("bind {} [{}]", keyname, action));
+			} catch (const std::exception& ex) {
+				_logger.error(std::format("bind {} [{}] failed : {}", keyname, action, ex.what()));
+			}
+		}
+	}
+
+	void G13_Manager::init_profiles() {
+		// Resolve profiles directory
+		std::string profile_dir = string_config_value("profiles_dir");
+		if (profile_dir.empty()) {
+			profile_dir = std::string("~/.g13d/profiles");
+		}
+
+		// Expand possible '~'
+		wordexp_t exp_result;
+		wordexp(profile_dir.c_str(), &exp_result, 0);
+		profile_dir = std::string(*(exp_result.we_wordv));
+		wordfree(&exp_result);
+
+		// Make the directory if it doesn't exist
+		std::filesystem::create_directories(profile_dir);
+
+		// Load all profiles in directory into all devices
+		for (const auto& g13 : g13s) {
+			for (const auto& entry: std::filesystem::directory_iterator(profile_dir)) {
+				load_profile(g13, entry.path());
+			}
+		}
 	}
 
 	void G13_Manager::set_log_level(::boost::log::trivial::severity_level lvl) {
