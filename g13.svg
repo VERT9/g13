@@ -2,20 +2,20 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="744.09448819"
    height="1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.47 r22583"
-   sodipodi:docname="g13.svg">
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="g13.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -40,19 +40,22 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="199.84105"
-     inkscape:cy="570.96325"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="-74.246212"
+     inkscape:cy="473.76154"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1438"
-     inkscape:window-height="898"
-     inkscape:window-x="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1003"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -65,6 +68,18 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="background">
+    <rect
+       style="display:inline;fill:#545454;fill-opacity:1"
+       id="rect1505"
+       width="587.11194"
+       height="900.21704"
+       x="60.428627"
+       y="96.792366" />
+  </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
@@ -97,7 +112,7 @@
        id="image2847"
        height="896"
        width="598"
-       xlink:href="file:///home/nex/sc2/g13.png" />
+       xlink:href="g13.png" />
     <path
        style="fill:#ffffff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 136.75,380.36218 -4.5,31 57.75,6 4,-38 -57.25,1 z"
@@ -262,14 +277,15 @@
        transform="matrix(3.2486745,0,0,3.2486745,-1272.1266,-1449.2213)" />
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Futura LT Condensed;-inkscape-font-specification:'Futura LT Condensed, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Futura LT Condensed';-inkscape-font-specification:'Futura LT Condensed, Bold';fill:#000000;fill-opacity:1;stroke:none"
        x="-698.62152"
        y="-53.552822"
        id="text3722"><tspan
          sodipodi:role="line"
          id="tspan3724"
          x="-698.62152"
-         y="-53.552822" /></text>
+         y="-53.552822"
+         style="font-size:20px;line-height:1.25"> </tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -277,348 +293,424 @@
      inkscape:label="keys">
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="163.13687"
        y="404.76218"
        id="text3751"><tspan
          sodipodi:role="line"
          id="tspan3753"
          x="163.13687"
-         y="404.76218">5</tspan></text>
+         y="404.76218"
+         style="font-size:20px;line-height:1.25">G1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="229.60547"
        y="407.26218"
        id="text3755"><tspan
          sodipodi:role="line"
          id="tspan3757"
          x="229.60547"
-         y="407.26218">3</tspan></text>
+         y="407.26218"
+         style="font-size:20px;line-height:1.25">G2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="290.6897"
        y="408.63718"
        id="text3759"><tspan
          sodipodi:role="line"
          id="tspan3761"
          x="290.6897"
-         y="408.63718">1</tspan></text>
+         y="408.63718"
+         style="font-size:20px;line-height:1.25">G3</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="352.11844"
        y="409.38718"
        id="text3763"><tspan
          sodipodi:role="line"
          id="tspan3765"
          x="352.11844"
-         y="409.38718">0</tspan></text>
+         y="409.38718"
+         style="font-size:20px;line-height:1.25">G4</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="413.36734"
        y="409.01218"
        id="text3767"><tspan
          sodipodi:role="line"
          id="tspan3769"
          x="413.36734"
-         y="409.01218">2</tspan></text>
+         y="409.01218"
+         style="font-size:20px;line-height:1.25">G5</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="475.24875"
        y="408.25217"
        id="text3771"><tspan
          sodipodi:role="line"
          id="tspan3773"
          x="475.24875"
-         y="408.25217">4</tspan></text>
+         y="408.25217"
+         style="font-size:20px;line-height:1.25">G6</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="543.12268"
        y="406.63718"
        id="text3775"><tspan
          sodipodi:role="line"
          id="tspan3777"
          x="543.12268"
-         y="406.63718">6</tspan></text>
+         y="406.63718"
+         style="font-size:20px;line-height:1.25">G7</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="157.08374"
        y="458.87045"
        id="text3779"><tspan
          sodipodi:role="line"
          id="tspan3781"
          x="157.08374"
-         y="458.87045">F</tspan></text>
+         y="458.87045"
+         style="font-size:20px;line-height:1.25">G8</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="223.71857"
        y="463.9086"
        id="text3783"><tspan
          sodipodi:role="line"
          id="tspan3785"
          x="223.71857"
-         y="463.9086">V</tspan></text>
+         y="463.9086"
+         style="font-size:20px;line-height:1.25">G9</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="286.5004"
        y="466.73703"
        id="text3787"><tspan
          sodipodi:role="line"
          id="tspan3789"
          x="286.5004"
-         y="466.73703">E</tspan></text>
+         y="466.73703"
+         style="font-size:20px;line-height:1.25">G10</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="351.00229"
        y="468.50479"
        id="text3791"><tspan
          sodipodi:role="line"
          id="tspan3793"
          x="351.00229"
-         y="468.50479">C</tspan></text>
+         y="468.50479"
+         style="font-size:20px;line-height:1.25">G11</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="414.68658"
        y="467.97446"
        id="text3795"><tspan
          sodipodi:role="line"
          id="tspan3797"
          x="414.68658"
-         y="467.97446">B</tspan></text>
+         y="467.97446"
+         style="font-size:20px;line-height:1.25">G12</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="478.46893"
        y="465.94153"
        id="text3799"><tspan
          sodipodi:role="line"
          id="tspan3801"
          x="478.46893"
-         y="465.94153">G</tspan></text>
+         y="465.94153"
+         style="font-size:20px;line-height:1.25">G13</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="544.6557"
        y="461.69888"
        id="text3803"><tspan
          sodipodi:role="line"
          id="tspan3805"
          x="544.6557"
-         y="461.69888">I</tspan></text>
+         y="461.69888"
+         style="font-size:20px;line-height:1.25">G14</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="212.44856"
        y="522.36621"
        id="text3807"><tspan
          sodipodi:role="line"
          id="tspan3809"
          x="212.44856"
-         y="522.36621">Shift</tspan></text>
+         y="522.36621"
+         style="font-size:20px;line-height:1.25">G15</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="283.36774"
        y="527.37146"
        id="text3811"><tspan
          sodipodi:role="line"
          id="tspan3813"
          x="283.36774"
-         y="527.37146">M</tspan></text>
+         y="527.37146"
+         style="font-size:20px;line-height:1.25">G16</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="349.66867"
        y="529.05084"
        id="text3815"><tspan
          sodipodi:role="line"
          id="tspan3817"
          x="349.66867"
-         y="529.05084">T</tspan></text>
+         y="529.05084"
+         style="font-size:20px;line-height:1.25">G17</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="415.45883"
        y="529.66956"
        id="text3819"><tspan
          sodipodi:role="line"
          id="tspan3821"
          x="415.45883"
-         y="529.66956">L</tspan></text>
+         y="529.66956"
+         style="font-size:20px;line-height:1.25">G18</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="484.77365"
        y="526.66431"
        id="text3823"><tspan
          sodipodi:role="line"
          id="tspan3825"
          x="484.77365"
-         y="526.66431">H</tspan></text>
+         y="526.66431"
+         style="font-size:20px;line-height:1.25">G19</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="257.02783"
        y="589.59686"
        id="text3827"><tspan
          sodipodi:role="line"
          id="tspan3829"
          x="257.02783"
-         y="589.59686">A</tspan></text>
+         y="589.59686"
+         style="font-size:20px;line-height:1.25">G20</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="348.86005"
        y="591.27618"
        id="text3831"><tspan
          sodipodi:role="line"
          id="tspan3833"
          x="348.86005"
-         y="591.27618">S</tspan></text>
+         y="591.27618"
+         style="font-size:20px;line-height:1.25">G21</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="429.24069"
        y="590.65747"
        id="text3835"><tspan
          sodipodi:role="line"
          id="tspan3837"
          x="429.24069"
-         y="590.65747">Ctrl</tspan></text>
+         y="590.65747"
+         style="font-size:20px;line-height:1.25">G22</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-size:12px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
        x="550.16028"
        y="741.3371"
        id="text3839"><tspan
          sodipodi:role="line"
          id="tspan3841"
          x="550.16028"
-         y="741.3371">W</tspan></text>
+         y="741.3371"
+         style="font-size:12px;line-height:1.25;-inkscape-font-specification:'Serpentine LT Medium, Bold';font-family:'Serpentine LT Medium';font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">DOWN</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-size:12px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
        x="662.70404"
        y="-494.93872"
        id="text3843"
-       transform="matrix(0,1,-1,0,0,0)"><tspan
+       transform="rotate(90)"><tspan
          sodipodi:role="line"
          id="tspan3845"
          x="662.70404"
-         y="-494.93872">Tab</tspan></text>
+         y="-494.93872"
+         style="font-size:12px;line-height:1.25;-inkscape-font-specification:'Serpentine LT Medium, Bold';font-family:'Serpentine LT Medium';font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">LEFT</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:14.19729233px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
-       x="575.56738"
-       y="645.95782"
-       id="text3847"><tspan
-         sodipodi:role="line"
-         id="tspan3849"
-         x="575.56738"
-         y="645.95782">Back</tspan><tspan
-         sodipodi:role="line"
-         x="575.56738"
-         y="663.70447"
-         id="tspan3887">space</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="226.11285"
        y="346.40646"
        id="text3851"><tspan
          sodipodi:role="line"
          id="tspan3853"
          x="226.11285"
-         y="346.40646">D</tspan></text>
+         y="346.40646"
+         style="font-size:20px;line-height:1.25">M1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="310.66953"
        y="346.40646"
        id="text3855"><tspan
          sodipodi:role="line"
          id="tspan3857"
          x="310.66953"
-         y="346.40646">X</tspan></text>
+         y="346.40646"
+         style="font-size:20px;line-height:1.25">M2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="395.33087"
        y="346.40646"
        id="text3859"><tspan
          sodipodi:role="line"
          id="tspan3861"
          x="395.33087"
-         y="346.40646">Y</tspan></text>
+         y="346.40646"
+         style="font-size:20px;line-height:1.25">M3</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="482.13199"
        y="346.40646"
        id="text3863"><tspan
          sodipodi:role="line"
          id="tspan3865"
          x="482.13199"
-         y="346.40646">Z</tspan></text>
+         y="346.40646"
+         style="font-size:20px;line-height:1.25">MR</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="275.75876"
        y="311.01218"
        id="text3867"><tspan
          sodipodi:role="line"
          id="tspan3869"
          x="275.75876"
-         y="311.01218">N</tspan></text>
+         y="311.01218"
+         style="font-size:20px;line-height:1.25">L1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="326.95679"
        y="311.01218"
        id="text3871"><tspan
          sodipodi:role="line"
          id="tspan3873"
          x="326.95679"
-         y="311.01218">R</tspan></text>
+         y="311.01218"
+         style="font-size:20px;line-height:1.25">L2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="378.39902"
        y="311.01218"
        id="text3875"><tspan
          sodipodi:role="line"
          id="tspan3877"
          x="378.39902"
-         y="311.01218">P</tspan></text>
+         y="311.01218"
+         style="font-size:20px;line-height:1.25">L3</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="429.19348"
        y="311.01218"
        id="text3879"><tspan
          sodipodi:role="line"
          id="tspan3881"
          x="429.19348"
-         y="311.01218">K</tspan></text>
+         y="311.01218"
+         style="font-size:20px;line-height:1.25">L4</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Serpentine LT Medium;-inkscape-font-specification:'Serpentine LT Medium, Bold'"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:0%;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        x="210.71782"
        y="310.25363"
        id="text3883"><tspan
          sodipodi:role="line"
          id="tspan3885"
          x="210.71782"
-         y="310.25363">F1</tspan></text>
+         y="310.25363"
+         style="font-size:20px;line-height:1.25">BD</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+       x="529.73047"
+       y="617.42499"
+       id="text574"><tspan
+         sodipodi:role="line"
+         x="529.73047"
+         y="617.42499"
+         id="tspan576"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">STICK_PAGEUP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+       x="520.5755"
+       y="691.47687"
+       id="text574-9"><tspan
+         sodipodi:role="line"
+         x="520.5755"
+         y="691.47687"
+         id="tspan618"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.66666667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">STICK_PAGEDOWN</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+       x="623.61066"
+       y="-526.06177"
+       id="text624"
+       transform="rotate(90)"><tspan
+         sodipodi:role="line"
+         x="623.61066"
+         y="-526.06177"
+         id="tspan626"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">STICK_LEFT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+       x="615.45465"
+       y="-609.26849"
+       id="text624-6"
+       transform="rotate(90)"><tspan
+         sodipodi:role="line"
+         x="615.45465"
+         y="-609.26849"
+         id="tspan626-2"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">STICK_RIGHT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000"
+       x="565.26422"
+       y="655.9967"
+       id="text624-61"><tspan
+         sodipodi:role="line"
+         x="565.26422"
+         y="655.9967"
+         id="tspan626-8"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.6667px;font-family:'Serpentine LT Medium';-inkscape-font-specification:'Serpentine LT Medium, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">TOP</tspan></text>
   </g>
 </svg>
