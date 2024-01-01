@@ -82,7 +82,7 @@ namespace G13 {
 	}
 
 	void G13_LCD::write_string(const char* str) {
-		_logger.info("writing \"" + std::to_string(*str) + "\"");
+		_logger.trace("writing \"" + std::to_string(*str) + "\"");
 		while (*str) {
 			if (*str == '\n') {
 				cursor_col = 0;
