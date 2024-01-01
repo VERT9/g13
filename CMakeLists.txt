@@ -12,6 +12,28 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 # Boost
 find_package(Boost 1.74.0 COMPONENTS log system program_options REQUIRED)
 
+############################
+# External Libraries (begin)
+############################
+include(FetchContent)
+FetchContent_Declare(
+        pugixml
+        GIT_REPOSITORY https://github.com/zeux/pugixml.git
+        GIT_TAG "v1.14"
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS ON
+        SYSTEM
+)
+# more `FetchContent_Declare`s (if any). They should all be declared
+# before any calls to FetchContent_Make_available (see docs for why).
+
+FetchContent_MakeAvailable(pugixml)
+# more `FetchContent_MakeAvailable`s (if any).
+
+############################
+# External Libraries   (end)
+############################
+
 # Image conversion utility
 add_executable(pbm2lpbm src/pbm2lpbm/pbm2lpbm.cpp)
 
@@ -19,7 +41,7 @@ add_executable(pbm2lpbm src/pbm2lpbm/pbm2lpbm.cpp)
 include_directories(./src/main)
 file(GLOB_RECURSE SRC_FILES "./src/main/*.h" "./src/main/*.hpp" "./src/main/*.cc" "./src/main/*.cpp")
 add_executable(g13d ${SRC_FILES})
-target_link_libraries (g13d usb-1.0 ${Boost_LIBRARIES} evdev pthread)
+target_link_libraries (g13d usb-1.0 ${Boost_LIBRARIES} evdev pthread pugixml)
 
 # Install
 install(TARGETS g13d pbm2lpbm DESTINATION bin PERMISSIONS OWNER_EXECUTE)
