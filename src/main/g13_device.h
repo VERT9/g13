@@ -20,8 +20,6 @@ namespace G13 {
 	class G13_Action;
 	class G13_Manager;
 	class G13_Font;
-//	class G13_LCD;
-//	class G13_Stick;
 
 	typedef boost::shared_ptr<G13_Action> G13_ActionPtr;
 	typedef boost::shared_ptr<G13_Font> FontPtr;
@@ -53,7 +51,7 @@ namespace G13 {
 
 		FontPtr switch_to_font(const std::string& name);
 		void switch_to_profile(const std::string& name);
-		ProfilePtr profile(const std::string& name);
+		ProfilePtr profile(const std::string& id, const std::string& name = "");
 
 		void dump(std::ostream&, int detail = 0);
 		void command(char const* str);

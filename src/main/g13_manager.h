@@ -43,6 +43,8 @@ namespace G13 {
 	protected:
 		void init_keynames();
 		void display_keys();
+		void init_profiles();
+		void load_profile(G13_Device* d, const std::string& filename);
 		void discover_g13s(libusb_device** devs, ssize_t count, std::vector<G13_Device*>& g13s);
 		void cleanup();
 

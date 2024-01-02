@@ -1,4 +1,6 @@
 rgb 255 0 0
+font 5x8
+
 bind G1 KEY_ESC
 bind G2 KEY_1
 bind G3 KEY_Q
@@ -25,3 +27,8 @@ bind STICK_LEFT KEY_A
 bind STICK_RIGHT KEY_D
 bind STICK_UP KEY_W
 bind STICK_DOWN KEY_S
+
+stickzone del STICK_PAGEUP
+stickzone del STICK_PAGEDOWN
+stickzone bounds STICK_UP 0 0 1 .1
+stickzone bounds STICK_DOWN 0 .9 1 1

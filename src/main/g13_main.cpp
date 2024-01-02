@@ -23,10 +23,10 @@ int main(int argc, char* argv[]) {
 	};
 	add_string_option("logo", "set logo from file");
 	add_string_option("config", "load config commands from file");
-	add_string_option("pipe_in", "specify name for input pipe");
-	add_string_option("pipe_out", "specify name for output pipe");
-	add_string_option("log_level", "logging level");
-	// add_string_option( "logfile", "write log to logfile" );
+	add_string_option("pipe_in", "specify name for input pipe; default is '/tmp/g13-0'");
+	add_string_option("pipe_out", "specify name for output pipe; default is '/tmp/g13-0_out'");
+	add_string_option("log_level", "logging level; default is 'info'");
+	add_string_option("profiles_dir", "profiles directory; default is '~/.g13d/profiles'");
 
 	po::positional_options_description p;
 	p.add("logo", -1);
