@@ -35,6 +35,8 @@ namespace G13 {
 	const size_t G13_LCD_BUFFER_SIZE = 0x3c0;
 	const size_t G13_NUM_KEYS = 40;
 
+	void transfer_cb(libusb_transfer* transfer);
+
 	class G13_Device {
 	public:
 		G13_Device(G13_Manager& manager, G13_Log& logger, libusb_device_handle* handle, int id);
@@ -48,6 +50,9 @@ namespace G13 {
 
 		G13_Stick& stick() { return _stick; }
 		const G13_Stick& stick() const { return _stick; }
+
+		G13_Log& logger() { return _logger; }
+		const G13_Log& logger() const { return _logger; }
 
 		FontPtr switch_to_font(const std::string& name);
 		void switch_to_profile(const std::string& name);
@@ -89,6 +94,8 @@ namespace G13 {
 		typedef boost::function<void(const char*)> COMMAND_FUNCTION;
 		typedef std::map<std::string, COMMAND_FUNCTION> CommandFunctionTable;
 
+		std::string describe_libusb_error_code(int code);
+
 	protected:
 		void _init_fonts();
 		void init_lcd();
@@ -123,7 +130,6 @@ namespace G13 {
 	private:
 		int g13_create_uinput();
 		int g13_create_fifo(const char* fifo_name);
-		std::string describe_libusb_error_code(int code);
 	};
 }
 
