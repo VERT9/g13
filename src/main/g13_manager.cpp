@@ -40,7 +40,7 @@ namespace G13 {
 
 	void G13_Manager::discover_g13s(libusb_device** devs, ssize_t count, vector<G13_Device*>& g13s) {
 		for (int i = 0; i < count; i++) {
-			libusb_device_descriptor desc;
+			libusb_device_descriptor desc{};
 			int r = libusb_get_device_descriptor(devs[i], &desc);
 			if (r < 0) {
 				_logger.error("Failed to get device descriptor");
@@ -124,13 +124,13 @@ namespace G13 {
 		ssize_t cnt;
 		int ret;
 
-		ret = libusb_init(&ctx);
+		const struct libusb_init_option options = {.option = LIBUSB_OPTION_LOG_LEVEL, .value = {.ival = LIBUSB_LOG_LEVEL_INFO}};
+		ret = libusb_init_context(&ctx, &options, 1);
 		if (ret < 0) {
 			_logger.error("Initialization error: " + std::to_string(ret));
 			return 1;
 		}
 
-		libusb_set_option(ctx, LIBUSB_OPTION_LOG_LEVEL, 3);
 		cnt = libusb_get_device_list(ctx, &devs);
 		if (cnt < 0) {
 			_logger.error("Error while getting device list");
@@ -165,7 +165,6 @@ namespace G13 {
 
 		do {
 			if (!g13s.empty()) {
-
 				for (auto & g13 : g13s) {
 					// TODO allow for other LCD apps to run
 					g13->lcd().image_clear();
@@ -182,7 +181,8 @@ namespace G13 {
 
 					int status = g13->read_keys();
 					g13->read_commands();
-					if (status < 0)
+					int err = libusb_handle_events(ctx);
+					if(status < 0 || err != LIBUSB_SUCCESS)
 						running = false;
 				}
 			}

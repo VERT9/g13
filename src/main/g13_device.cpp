@@ -269,27 +269,68 @@ namespace G13 {
 		libusb_close(handle);
 	}
 
+	/**
+	 * Handles the libusb transfer completion event.
+	 *
+	 * @param transfer
+	 */
+	void transfer_cb(struct libusb_transfer* transfer) {
+		// Fetch the device from user_data
+		auto* device = static_cast<G13_Device*>(transfer->user_data);
+		int size = transfer->actual_length;
+		switch(transfer->status) {
+			case LIBUSB_TRANSFER_TIMED_OUT:
+				// Resubmit transfer if size does not match,
+				// otherwise fall through and try to complete the transfer
+				if (size != G13_REPORT_SIZE) {
+					int error = libusb_submit_transfer(transfer);
+					if (error && error != LIBUSB_ERROR_TIMEOUT) {
+						device->logger().error("Error while reading keys (during resubmit): " + std::to_string(error) + " ("
+									  + device->describe_libusb_error_code(error) + ")");
+						libusb_free_transfer(transfer);
+					}
+					break;
+				}
+			case LIBUSB_TRANSFER_COMPLETED: {
+				unsigned char* buffer = transfer->buffer;
+
+				device->parse_joystick(buffer);
+				device->current_profile().parse_keys(buffer);
+				device->send_event(EV_SYN, SYN_REPORT, 0);
+				libusb_free_transfer(transfer);
+			}
+			// Ignoring these for now
+			case LIBUSB_TRANSFER_ERROR:
+			case LIBUSB_TRANSFER_CANCELLED:
+			case LIBUSB_TRANSFER_STALL:
+			case LIBUSB_TRANSFER_NO_DEVICE:
+			case LIBUSB_TRANSFER_OVERFLOW:
+				break;
+		}
+	}
+
 	/*!
-	 * reads and processes key state report from G13
+	 * creates, fills and submits a data transfer for the device
+	 * @see https://libusb.sourceforge.io/api-1.0/group__libusb__asyncio.html#details
 	 */
 	int G13_Device::read_keys() {
 		unsigned char buffer[G13_REPORT_SIZE];
-		int size;
-		int error = libusb_interrupt_transfer(handle,
-											  LIBUSB_ENDPOINT_IN | G13_KEY_ENDPOINT, buffer, G13_REPORT_SIZE,
-											  &size, 100);
+		libusb_transfer* transfer = libusb_alloc_transfer(0);
+		// pass the current device (this) along as user_data, so we can manipulate it later
+		libusb_fill_interrupt_transfer(transfer,
+									   handle,
+									   LIBUSB_ENDPOINT_IN | G13_KEY_ENDPOINT,
+									   buffer,
+									   G13_REPORT_SIZE,
+									   transfer_cb,
+									   this,
+									   100);
 
+		int error = libusb_submit_transfer(transfer);
 		if (error && error != LIBUSB_ERROR_TIMEOUT) {
 			_logger.error("Error while reading keys: " + std::to_string(error) + " ("
 														+ describe_libusb_error_code(error) + ")");
-			//    G13_LOG( error, "Stopping daemon" );
-			//    return -1;
-		}
-
-		if (size == G13_REPORT_SIZE) {
-			parse_joystick(buffer);
-			_current_profile->parse_keys(buffer);
-			send_event(EV_SYN, SYN_REPORT, 0);
+			libusb_free_transfer(transfer);
 		}
 
 		return 0;
