@@ -38,15 +38,12 @@ namespace G13 {
 	G13_Action_Keys::~G13_Action_Keys() {}
 
 	void G13_Action_Keys::act(G13_Device& g13, bool is_down) {
-		if (is_down) {
-			for (int i = 0; i < _keys.size(); i++) {
-				g13.send_event(EV_KEY, _keys[i], is_down);
-				_logger.trace("sending KEY DOWN " + std::to_string(_keys[i]));
-			}
-		} else {
-			for (int i = _keys.size() - 1; i >= 0; i--) {
-				g13.send_event(EV_KEY, _keys[i], is_down);
-				_logger.trace("sending KEY UP " + std::to_string(_keys[i]));
+		for (int _key : _keys) {
+			g13.send_event(EV_KEY, _key, is_down);
+			if (is_down) {
+				_logger.trace("sending KEY DOWN " + std::to_string(_key));
+			} else {
+				_logger.trace("sending KEY UP " + std::to_string(_key));
 			}
 		}
 	}
