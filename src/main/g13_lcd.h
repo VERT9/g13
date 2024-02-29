@@ -49,7 +49,7 @@ namespace G13 {
 		void image_clearpixel(unsigned row, unsigned col);
 
 		void write_char(char c, int row = -1, int col = -1);
-		void write_string(const char* str);
+		void write_string(const char* str, bool flush = true);
 		void write_pos(int row, int col);
 
 		void image_test(int x, int y);

@@ -168,16 +168,22 @@ namespace G13 {
 				for (auto & g13 : g13s) {
 					// TODO allow for other LCD apps to run
 					g13->lcd().image_clear();
+
+					// Write current profile name to screen
+					g13->lcd().write_pos(0, 0);
+					g13->lcd().write_string(g13->current_profile().name().c_str(), false);
+
+					g13->lcd().write_pos(4, 0);
+					char stick[50];
+					sprintf(stick, "x:%3d, y:%3d, dx:%.2f, dy:%.2f", g13->stick().getCurrentPos().x, g13->stick().getCurrentPos().y, g13->stick().getDX(), g13->stick().getDY());
+					g13->lcd().write_string(stick, false);
+
 					// Write current date/time to screen
 					std::time_t t = std::time(nullptr);
 					char mbstr[100];
 					std::strftime(mbstr, sizeof(mbstr), "%F %I:%M:%S", std::localtime(&t));
 					g13->lcd().write_pos(3, 0);
 					g13->lcd().write_string(mbstr);
-
-					// Write current profile name to screen
-					g13->lcd().write_pos(0, 0);
-					g13->lcd().write_string(g13->current_profile().name().c_str());
 
 					int status = g13->read_keys();
 					g13->read_commands();

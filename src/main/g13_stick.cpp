@@ -77,6 +77,38 @@ namespace G13 {
 					}
 	}
 
+	G13_StickCoord G13_Stick::getCurrentPos() {
+		return _current_pos;
+	}
+
+	double G13_Stick::getDX() {
+		double dx = 0.5;
+		if (_current_pos.x <= _center_pos.x) {
+			dx = _current_pos.x - _bounds.tl.x;
+			dx /= (_center_pos.x - _bounds.tl.x) * 2;
+		} else {
+			dx = _bounds.br.x - _current_pos.x;
+			dx /= (_bounds.br.x - _center_pos.x) * 2;
+			dx = 1.0 - dx;
+		}
+
+		return dx;
+	}
+
+	double G13_Stick::getDY() {
+		double dy = 0.5;
+		if (_current_pos.y <= _center_pos.y) {
+			dy = _current_pos.y - _bounds.tl.y;
+			dy /= (_center_pos.y - _bounds.tl.y) * 2;
+		} else {
+			dy = _bounds.br.y - _current_pos.y;
+			dy /= (_bounds.br.y - _center_pos.y) * 2;
+			dy = 1.0 - dy;
+		}
+
+		return dy;
+	}
+
 	void G13_Stick::parse_joystick(unsigned char* buf) {
 
 		_current_pos.x = buf[1];
@@ -96,24 +128,8 @@ namespace G13 {
 		};
 
 		// determine our normalized position
-		double dx = 0.5;
-		if (_current_pos.x <= _center_pos.x) {
-			dx = _current_pos.x - _bounds.tl.x;
-			dx /= (_center_pos.x - _bounds.tl.x) * 2;
-		} else {
-			dx = _bounds.br.x - _current_pos.x;
-			dx /= (_bounds.br.x - _center_pos.x) * 2;
-			dx = 1.0 - dx;
-		}
-		double dy = 0.5;
-		if (_current_pos.y <= _center_pos.y) {
-			dy = _current_pos.y - _bounds.tl.y;
-			dy /= (_center_pos.y - _bounds.tl.y) * 2;
-		} else {
-			dy = _bounds.br.y - _current_pos.y;
-			dy /= (_bounds.br.y - _center_pos.y) * 2;
-			dy = 1.0 - dy;
-		}
+		double dx = getDX();
+		double dy = getDY();
 
 		_logger.trace("x=" + std::to_string(_current_pos.x) + " y=" + std::to_string(_current_pos.y) + " dx=" + std::to_string(dx) + " dy=" + std::to_string(dy));
 		G13_ZoneCoord jpos(dx, dy);
