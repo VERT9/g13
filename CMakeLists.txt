@@ -44,4 +44,4 @@ add_executable(g13d ${SRC_FILES})
 target_link_libraries (g13d usb-1.0 ${Boost_LIBRARIES} evdev pthread pugixml)
 
 # Install
-install(TARGETS g13d pbm2lpbm DESTINATION bin PERMISSIONS OWNER_EXECUTE)
+install(TARGETS g13d pbm2lpbm DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
