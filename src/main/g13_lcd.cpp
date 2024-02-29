@@ -81,8 +81,17 @@ namespace G13 {
 		}
 	}
 
-	void G13_LCD::write_string(const char* str) {
-		_logger.trace("writing \"" + std::to_string(*str) + "\"");
+	/**
+	 * Writes a string to the LCD at the current position. By default, the string
+	 * is sent directly to the LCD. The flush parameter can be used to disabled
+	 * this allowing for multiple strings to be queued in the buffer before
+	 * sending to the LCD. Helps with fading images.
+	 *
+	 * @param char* str
+	 * @param bool flush
+	 */
+	void G13_LCD::write_string(const char* str, bool flush) {
+		_logger.trace("writing \"" + std::string(str) + "\"");
 		while (*str) {
 			if (*str == '\n') {
 				cursor_col = 0;
@@ -102,7 +111,9 @@ namespace G13 {
 			}
 			++str;
 		}
-		image_send();
+
+		if (flush)
+			image_send();
 	}
 
 	void G13_LCD::write_pos(int row, int col) {
