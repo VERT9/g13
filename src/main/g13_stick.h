@@ -58,6 +58,10 @@ namespace G13 {
 
 		void dump(std::ostream&) const;
 
+		G13_StickCoord getCurrentPos();
+		double getDX();
+		double getDY();
+
 	protected:
 
 		void _recalc_calibrated();
