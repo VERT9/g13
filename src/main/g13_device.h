@@ -127,6 +127,9 @@ namespace G13 {
 		G13_Stick _stick;
 
 		bool keys[G13_NUM_KEYS];
+
+		unsigned char* key_buffer;
+		libusb_transfer* transfer;
 	private:
 		int g13_create_uinput();
 		int g13_create_fifo(const char* fifo_name);
