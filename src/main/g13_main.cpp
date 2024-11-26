@@ -4,14 +4,42 @@
 #include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 
+#include "container.h"
+#include "G13_DisplayApp.h"
+
 using namespace std;
 using namespace G13;
 namespace po = boost::program_options;
 
-int main(int argc, char* argv[]) {
+/**
+ * @brief Loads all necessary class factories into the IoC container
+ */
+void bootFramework() {
+	auto& ioc = Container::Instance();
 
-	G13_Manager manager;
-	manager.set_log_level("info");
+	ioc.RegisterFactory<G13_Log>([&] {
+		return std::make_shared<G13_Log>();
+	});
+	ioc.RegisterFactory<G13_Manager>([&] {
+		return std::make_shared<G13_Manager>(ioc.Resolve<G13_Log>());
+	});
+	ioc.RegisterFactory<G13_CurrentProfileApp>([&] {
+		return std::make_shared<G13_CurrentProfileApp>(ioc.Resolve<G13_Log>());
+	});
+	ioc.RegisterFactory<G13_ProfileSwitcherApp>([&] {
+		return std::make_shared<G13_ProfileSwitcherApp>(ioc.Resolve<G13_Log>());
+	});
+	ioc.RegisterFactory<G13_TesterApp>([&] {
+		return std::make_shared<G13_TesterApp>(ioc.Resolve<G13_Log>());
+	});
+	//TODO register logger and other services
+}
+
+int main(int argc, char* argv[]) {
+	bootFramework();
+	Container::Instance().Resolve<G13_Log>()->set_log_level("info");
+
+	const auto manager = Container::Instance().Resolve<G13_Manager>();
 
 	// Declare the supported options.
 	po::options_description desc("Allowed options");
@@ -42,18 +70,18 @@ int main(int argc, char* argv[]) {
 
 	BOOST_FOREACH(const string& tag, sopt_names) {
 					if (vm.count(tag)) {
-						manager.set_string_config_value(tag, vm[tag].as<string>());
+						manager->set_string_config_value(tag, vm[tag].as<string>());
 					}
 				}
 
 	if (vm.count("logo")) {
-		manager.set_logo(vm["logo"].as<string>());
+		manager->set_logo(vm["logo"].as<string>());
 	}
 
 	if (vm.count("log_level")) {
-		manager.set_log_level(manager.string_config_value("log_level"));
+		Container::Instance().Resolve<G13_Log>()->set_log_level(manager->string_config_value("log_level"));
 	}
 
-	manager.run();
+	manager->run();
 }
 
