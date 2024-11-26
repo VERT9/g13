@@ -9,6 +9,8 @@
 
 #include <linux/uinput.h>
 
+#include <utility>
+
 using Helper::repr;
 
 namespace G13 {
@@ -85,5 +87,28 @@ namespace G13 {
 
 	void G13_Action_Command::dump(std::ostream& o) const {
 		o << "COMMAND : " << repr(_cmd);
+	}
+
+	void G13_Action_AppChange::act(G13_Device& kp, const bool is_down) {
+		if (is_down) {
+			kp.next_app();
+		}
+	}
+
+	void G13_Action_AppChange::dump(std::ostream& o) const {
+		o << "APP INDEX : " << keypad().get_current_app();
+	}
+
+	G13_Action_Dynamic::G13_Action_Dynamic(G13_Device& keypad, G13_Log& logger, std::function<void()> action) :
+			G13_Action(keypad, logger), _action(std::move(action)) {}
+
+	void G13_Action_Dynamic::act(G13_Device& kp, const bool is_down) {
+		if (is_down) {
+			_action();
+		}
+	}
+
+	void G13_Action_Dynamic::dump(std::ostream& o) const {
+		o << "Dynamic Action!";
 	}
 }
