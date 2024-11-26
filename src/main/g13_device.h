@@ -12,6 +12,8 @@
 #include <linux/uinput.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+
+#include "G13_DisplayApp.h"
 #include "g13_lcd.h"
 #include "g13_stick.h"
 
@@ -20,6 +22,7 @@ namespace G13 {
 	class G13_Action;
 	class G13_Manager;
 	class G13_Font;
+	class G13_DisplayApp;
 
 	typedef boost::shared_ptr<G13_Action> G13_ActionPtr;
 	typedef boost::shared_ptr<G13_Font> FontPtr;
@@ -88,6 +91,7 @@ namespace G13 {
 		G13_Font& current_font() { return *_current_font; }
 
 		G13_Profile& current_profile() { return *_current_profile; }
+		std::map<std::string, ProfilePtr> get_profiles() { return _profiles; }
 
 		int id_within_manager() const { return _id_within_manager; }
 
@@ -96,10 +100,31 @@ namespace G13 {
 
 		std::string describe_libusb_error_code(int code);
 
+		/**
+		 * @brief Displays the currently active app on the LCD screen
+		 */
+		void display_app();
+
+		/**
+		 * @brief Gets the index of the currently displayed app
+		 * @return the index of the currently displayed app
+		 */
+		unsigned int get_current_app() const;
+
+		/**
+		 * @brief Cycles to the next app in rotation
+		 */
+		void next_app();
+
 	protected:
 		void _init_fonts();
 		void init_lcd();
 		void _init_commands();
+
+		/**
+		 * @brief Loads and initializes all available apps for the current device
+		 */
+		void _init_apps();
 
 		CommandFunctionTable _command_table;
 
@@ -130,6 +155,16 @@ namespace G13 {
 
 		unsigned char* key_buffer;
 		libusb_transfer* transfer;
+
+		/**
+		 * @brief Tracks the index of the currently active DisplayApp
+		 */
+		unsigned int current_app = 0;
+
+		/**
+		 * @brief Stores the list of available DisplayApps
+		 */
+		vector<std::shared_ptr<G13_DisplayApp>> _apps;
 	private:
 		int g13_create_uinput();
 		int g13_create_fifo(const char* fifo_name);

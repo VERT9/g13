@@ -417,6 +417,7 @@ namespace G13 {
 
 		_init_fonts();
 		_init_commands();
+		_init_apps();
 
 		key_buffer = new unsigned char[G13_REPORT_SIZE*2];
 		transfer = nullptr;
@@ -494,13 +495,15 @@ namespace G13 {
 			std::string action = remainder;
 			try {
 				if (auto key = _current_profile->find_key(keyname)) {
-					key->set_action(make_action(action));
+					vector<std::string> excluded {"BD", "L1", "L2", "L3", "L4"};
+					if (ranges::find(excluded, keyname) == excluded.end())
+						key->set_action(make_action(action));
 				} else if (auto stick_key = _stick.zone(keyname)) {
 					stick_key->set_action(make_action(action));
 				} else {
 					RETURN_FAIL("bind key " << keyname << " unknown");
 				}
-				_logger.trace("bind " + keyname + " [" + action + "]");
+				_logger.debug("bind " + keyname + " [" + action + "]");
 			} catch (const std::exception& ex) {
 				RETURN_FAIL("bind " << keyname << " " << action << " failed : " << ex.what());
 			}
@@ -588,7 +591,7 @@ namespace G13 {
 		G13_DEVICE_COMMAND(log_level) {
 			std::string level;
 			advance_ws(remainder, level);
-			manager().set_log_level(level);
+			_logger.set_log_level(level);
 		}
 
 		G13_DEVICE_COMMAND(refresh) {
@@ -645,5 +648,35 @@ namespace G13 {
 		bool old = keys[key];
 		keys[key] = v;
 		return old != v;
+	}
+
+	void G13_Device::_init_apps() {
+		// Bind BD key to switch apps
+		if (auto gkey = current_profile().find_key("BD")) {
+			gkey->set_action(G13_ActionPtr(new G13_Action_AppChange(*this, _logger)));
+		}
+
+		// Default time/profile display
+		this->_apps.emplace_back(Container::Instance().Resolve<G13_CurrentProfileApp>());
+		// Scrollable list allowing for selecting active profile
+		this->_apps.emplace_back(Container::Instance().Resolve<G13_ProfileSwitcherApp>());
+		// Just a test app to highlight limits of the display
+		//this->_apps.emplace_back(Container::Instance().Resolve<G13_TesterApp>());
+
+		// Call init of the app
+		this->_apps[this->current_app]->init(*this);
+	}
+
+	unsigned int G13_Device::get_current_app() const {
+		return this->current_app;
+	}
+
+	void G13_Device::next_app() {
+		this->current_app = ++this->current_app % this->_apps.size();
+		this->_apps[this->current_app]->init(*this);
+	}
+
+	void G13_Device::display_app() {
+		this->_apps[this->current_app]->display(*this);
 	}
 }
