@@ -12,12 +12,14 @@
 #include <boost/log/support/date_time.hpp>
 
 namespace G13 {
-	void G13_Log::set_log_level( ::boost::log::trivial::severity_level lvl ) {
+	G13_Log& G13_Log::set_log_level(::boost::log::trivial::severity_level lvl) {
 		boost::log::core::get()->set_filter(::boost::log::trivial::severity >= lvl);
 		G13_OUT( "set log level to " << lvl );
+
+		return *this;
 	}
 
-	void G13_Log::set_log_level( const std::string &level ) {
+	G13_Log& G13_Log::set_log_level( const std::string &level ) {
 		std::map<std::string, boost::log::trivial::severity_level> values = {
 				{BOOST_PP_STRINGIZE(trace), boost::log::trivial::severity_level::trace},
 				{BOOST_PP_STRINGIZE(debug), boost::log::trivial::severity_level::debug},
@@ -28,10 +30,12 @@ namespace G13 {
 		};
 		if (values.contains(level)) {
 			set_log_level(values[level]);
-			return;
+			return *this;
 		}
 
 		error("unknown log level: " + level);
+
+		return *this;
 	}
 
 	void G13_Log::trace(std::string message) {

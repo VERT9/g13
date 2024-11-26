@@ -13,8 +13,8 @@ namespace G13 {
 
 	class G13_Log {
 	public:
-		void set_log_level(::boost::log::trivial::severity_level lvl);
-		void set_log_level(const std::string&);
+		G13_Log& set_log_level(::boost::log::trivial::severity_level lvl);
+		G13_Log& set_log_level(const std::string&);
 
 		void trace(std::string message);
 		void debug(std::string message);
