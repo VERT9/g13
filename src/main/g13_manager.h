@@ -20,7 +20,7 @@ namespace G13 {
 	 */
 	class G13_Manager {
 	public:
-		G13_Manager();
+		G13_Manager(std::shared_ptr<G13_Log>);
 
 		G13_KEY_INDEX find_g13_key_value(const std::string& keyname) const;
 		std::string find_g13_key_name(G13_KEY_INDEX) const;
@@ -37,9 +37,6 @@ namespace G13 {
 
 		std::string make_pipe_name(G13_Device* d, bool is_input);
 
-		void set_log_level(::boost::log::trivial::severity_level lvl);
-		void set_log_level(const std::string&);
-
 	protected:
 		void init_keynames();
 		void display_keys();
@@ -48,7 +45,7 @@ namespace G13 {
 		void discover_g13s(libusb_device** devs, ssize_t count, std::vector<G13_Device*>& g13s);
 		void cleanup();
 
-		G13_Log _logger;
+		std::shared_ptr<G13_Log> _logger;
 
 		std::string logo_filename;
 		libusb_device** devs;

@@ -18,6 +18,7 @@
 #include <boost/log/utility/setup.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <pugixml.hpp>
+#include <utility>
 
 #include "g13_manager.h"
 #include "g13_device.h"
@@ -30,7 +31,7 @@ using Helper::find_or_throw;
 namespace G13 {
 	#define CONTROL_DIR std::string("/tmp/")
 
-	G13_Manager::G13_Manager() : ctx(0), devs(0) {}
+	G13_Manager::G13_Manager(std::shared_ptr<G13_Log> logger) : devs(0), ctx(0), _logger(std::move(logger)) {}
 
 	bool G13_Manager::running = true;
 
@@ -43,32 +44,32 @@ namespace G13 {
 			libusb_device_descriptor desc{};
 			int r = libusb_get_device_descriptor(devs[i], &desc);
 			if (r < 0) {
-				_logger.error("Failed to get device descriptor");
+				_logger->error("Failed to get device descriptor");
 				return;
 			}
 			if (desc.idVendor == G13_VENDOR_ID && desc.idProduct == G13_PRODUCT_ID) {
 				libusb_device_handle* handle;
 				int r = libusb_open(devs[i], &handle);
 				if (r != 0) {
-					_logger.error("Error opening G13 device");
+					_logger->error("Error opening G13 device");
 					return;
 				}
 				if (libusb_kernel_driver_active(handle, 0) == 1)
 					if (libusb_detach_kernel_driver(handle, 0) == 0)
-						_logger.info("Kernel driver detached");
+						_logger->info("Kernel driver detached");
 
 				r = libusb_claim_interface(handle, 0);
 				if (r < 0) {
-					_logger.error("Cannot Claim Interface");
+					_logger->error("Cannot Claim Interface");
 					return;
 				}
-				g13s.push_back(new G13_Device(*this, _logger, handle, g13s.size()));
+				g13s.push_back(new G13_Device(*this, *_logger, handle, g13s.size()));
 			}
 		}
 	}
 
 	void G13_Manager::cleanup() {
-		_logger.info("cleaning up");
+		_logger->info("cleaning up");
 		for (int i = 0; i < g13s.size(); i++) {
 			g13s[i]->cleanup();
 			delete g13s[i];
@@ -86,7 +87,7 @@ namespace G13 {
 	}
 
 	void G13_Manager::set_string_config_value(const std::string& name, const std::string& value) {
-		_logger.info("set_string_config_value " + name + " = " + repr(value).s);
+		_logger->info("set_string_config_value " + name + " = " + repr(value).s);
 		_string_config_values[name] = value;
 	}
 
@@ -127,19 +128,19 @@ namespace G13 {
 		const struct libusb_init_option options = {.option = LIBUSB_OPTION_LOG_LEVEL, .value = {.ival = LIBUSB_LOG_LEVEL_INFO}};
 		ret = libusb_init_context(&ctx, &options, 1);
 		if (ret < 0) {
-			_logger.error("Initialization error: " + std::to_string(ret));
+			_logger->error("Initialization error: " + std::to_string(ret));
 			return 1;
 		}
 
 		cnt = libusb_get_device_list(ctx, &devs);
 		if (cnt < 0) {
-			_logger.error("Error while getting device list");
+			_logger->error("Error while getting device list");
 			return 1;
 		}
 
 		discover_g13s(devs, cnt, g13s);
 		libusb_free_device_list(devs, 1);
-		_logger.info("Found " + std::to_string(g13s.size()) + " G13s");
+		_logger->info("Found " + std::to_string(g13s.size()) + " G13s");
 		if (g13s.size() == 0) {
 			return 1;
 		}
@@ -152,12 +153,12 @@ namespace G13 {
 			g13s[0]->write_lcd_file(logo_filename);
 		}
 
-		_logger.info("Active Stick zones ");
+		_logger->info("Active Stick zones ");
 		g13s[0]->stick().dump(std::cout);
 
 		std::string config_fn = string_config_value("config");
 		if (config_fn.size()) {
-			_logger.info("config_fn = " + config_fn);
+			_logger->info("config_fn = " + config_fn);
 			g13s[0]->read_config_file(config_fn);
 		}
 
@@ -167,23 +168,7 @@ namespace G13 {
 			if (!g13s.empty()) {
 				for (auto & g13 : g13s) {
 					// TODO allow for other LCD apps to run
-					g13->lcd().image_clear();
-
-					// Write current profile name to screen
-					g13->lcd().write_pos(0, 0);
-					g13->lcd().write_string(g13->current_profile().name().c_str(), false);
-
-					g13->lcd().write_pos(4, 0);
-					char stick[50];
-					sprintf(stick, "x:%3d, y:%3d, dx:%.2f, dy:%.2f", g13->stick().getCurrentPos().x, g13->stick().getCurrentPos().y, g13->stick().getDX(), g13->stick().getDY());
-					g13->lcd().write_string(stick, false);
-
-					// Write current date/time to screen
-					std::time_t t = std::time(nullptr);
-					char mbstr[100];
-					std::strftime(mbstr, sizeof(mbstr), "%F %I:%M:%S", std::localtime(&t));
-					g13->lcd().write_pos(3, 0);
-					g13->lcd().write_string(mbstr);
+					g13->display_app();
 
 					int status = g13->read_keys();
 					g13->read_commands();
@@ -280,13 +265,13 @@ namespace G13 {
 		pugi::xml_document doc;
 		pugi::xml_parse_result result = doc.load_file(filename.c_str());
 		if (!result) {
-			_logger.warning(std::string ("Profile can not be read: ").append(filename));
+			_logger->warning(std::string ("Profile can not be read: ").append(filename));
 			return;
 		}
 
 		std::string name = doc.select_node("/profiles/profile").node().attribute("name").value();
 		std::string guid = doc.select_node("/profiles/profile").node().attribute("guid").value();
-		_logger.info(std::format("{}: {}", guid, name));
+		_logger->info(std::format("{}: {}", guid, name));
 		ProfilePtr profile = device->profile(guid, name);
 
 		pugi::xpath_node_set assignments = doc.select_nodes("/profiles/profile/assignments[@devicecategory='Logitech.Gaming.LeftHandedController']/assignment[@backup='false']");
@@ -334,7 +319,7 @@ namespace G13 {
 				// Check for support: only multikey and keystroke elements for now
 				auto keys = keyset.node().first_child();
 				if (strcmp(keys.name(), "multikey") != 0 and strcmp(keys.name(), "keystroke") != 0) {
-					_logger.warning(std::format("Macro not supported: {}", keys.name()));
+					_logger->warning(std::format("Macro not supported: {}", keys.name()));
 					continue;
 				}
 
@@ -365,16 +350,18 @@ namespace G13 {
 
 			// Bind keys to actions
 			try {
-				if (auto key = profile->find_key(keyname)) {
-					key->set_action(device->make_action(action));
+				if (auto gkey = profile->find_key(keyname)) {
+					vector<std::string> excluded {"BD", "L1", "L2", "L3", "L4"};
+					if (ranges::find(excluded, keyname) == excluded.end())
+						gkey->set_action(device->make_action(action));
 				} else if (auto stick_key = device->stick().zone(keyname)) {
 					stick_key->set_action(device->make_action(action));
 				} else {
-					_logger.warning("bind key " + keyname + " unknown");
+					_logger->warning("bind key " + keyname + " unknown");
 				}
-				_logger.trace(std::format("bind {} [{}]", keyname, action));
+				_logger->debug(std::format("bind {} [{}]", keyname, action));
 			} catch (const std::exception& ex) {
-				_logger.error(std::format("bind {} [{}] failed : {}", keyname, action, ex.what()));
+				_logger->error(std::format("bind {} [{}] failed : {}", keyname, action, ex.what()));
 			}
 		}
 	}
@@ -401,13 +388,5 @@ namespace G13 {
 				load_profile(g13, entry.path());
 			}
 		}
-	}
-
-	void G13_Manager::set_log_level(::boost::log::trivial::severity_level lvl) {
-		_logger.set_log_level(lvl);
-	}
-
-	void G13_Manager::set_log_level(const std::string& level) {
-		_logger.set_log_level(level);
 	}
 }
