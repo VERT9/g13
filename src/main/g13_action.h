@@ -9,6 +9,8 @@
 #include <ostream>
 #include <vector>
 #include <string>
+
+#include "container.h"
 #include "g13_manager.h"
 
 namespace G13 {
@@ -73,7 +75,7 @@ namespace G13 {
 	 * action to send a command to the g13
 	 */
 	class G13_Action_Command : public G13_Action {
-	public:
+		public:
 		G13_Action_Command(G13_Device& keypad, G13_Log& logger, const std::string& cmd);
 		virtual ~G13_Action_Command();
 
@@ -83,13 +85,41 @@ namespace G13 {
 		std::string _cmd;
 	};
 
+	/*!
+	 * @brief an action to change the current display app on the g13
+	 */
+	class G13_Action_AppChange : public G13_Action {
+		public:
+			G13_Action_AppChange(G13_Device& keypad, G13_Log& logger):G13_Action(keypad, logger) {};
+			~G13_Action_AppChange() override = default;
+
+			void act(G13_Device&, bool is_down) override;
+			void dump(std::ostream&) const override;
+	};
+
+	/**
+	 * @brief an action that allows for dynamic setup via a lamda function
+	 */
+	class G13_Action_Dynamic : public G13_Action {
+		public:
+			G13_Action_Dynamic(G13_Device& keypad, G13_Log& logger, std::function<void()> action);
+			~G13_Action_Dynamic() override = default;
+
+			void act(G13_Device&, bool is_down) override;
+			void dump(std::ostream&) const override;
+		private:
+			std::function<void()> _action;
+	};
+
 	typedef boost::shared_ptr<G13_Action> G13_ActionPtr;
 
 	// *************************************************************************
 	template<class PARENT_T>
 		class G13_Actionable {
 		public:
-			G13_Actionable(PARENT_T& parent_arg, const std::string& name) : _parent_ptr(&parent_arg), _name(name) {}
+			G13_Actionable(PARENT_T& parent_arg, const std::string& name) : _parent_ptr(&parent_arg), _name(name) {
+				_logger = Container::Instance().Resolve<G13_Log>();
+			}
 			virtual ~G13_Actionable() { _parent_ptr = 0; }
 
 			G13_ActionPtr action() const { return _action; }
@@ -109,6 +139,7 @@ namespace G13 {
 		protected:
 			std::string _name;
 			G13_ActionPtr _action;
+			std::shared_ptr<G13_Log> _logger;
 
 		private:
 			PARENT_T* _parent_ptr;
