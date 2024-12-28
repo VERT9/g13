@@ -10,7 +10,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
 # Boost
-find_package(Boost 1.74.0 COMPONENTS log system program_options REQUIRED)
+find_package(Boost 1.83.0 COMPONENTS log system program_options REQUIRED)
 
 ############################
 # External Libraries (begin)

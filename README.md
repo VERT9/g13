@@ -6,7 +6,7 @@ This is a fork of [ecraven's g13 driver](https://github.com/ecraven/g13). It's b
 hopefully) to easily modify profiles while running. Some ideas were also taken
 from [khampf's](https://github.com/khampf/g13) fork as well.
 
-Built with Boost v1.74.0.3
+Built with Boost v1.83.0.2+b2
 
 ## Install
 ```shell
