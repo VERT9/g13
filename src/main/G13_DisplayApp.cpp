@@ -6,6 +6,16 @@
 #include "g13_profile.h"
 
 namespace G13 {
+	void G13_DisplayApp::init(G13_Device& device) {
+		// Disable LIGHT keys in case they've been assigned in other apps
+		for (int i = 1; i <= 4; i++) {
+			const auto gkey = device.current_profile().find_key("L"+std::to_string(i));
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+				// Do Nothing
+			}));
+		}
+	}
+
 	void G13_CurrentProfileApp::display(G13_Device& device) {
 		// Clear screen first
 		device.lcd().image_clear();
