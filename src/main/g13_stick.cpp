@@ -20,8 +20,7 @@ namespace G13 {
 		auto add_zone = [this, &keypad, &logger](const std::string& name, double x1, double y1, double x2, double y2) {
 			_zones.push_back(G13_StickZone(*this, "STICK_" + name,
 										   G13_ZoneBounds(x1, y1, x2, y2),
-										   G13_ActionPtr(
-												   new G13_Action_Keys(keypad, logger, "KEY_" + name))
+										   std::make_shared<G13_Action_Keys>(keypad, logger, "KEY_" + name)
 							 )
 			);
 		};

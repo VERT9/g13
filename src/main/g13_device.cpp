@@ -178,12 +178,12 @@ namespace G13 {
 	}
 
 	void G13_Device::_init_fonts() {
-		_current_font = FontPtr(new G13_Font("8x8", 8));
+		_current_font = std::make_shared<G13_Font>("8x8", 8);
 		_fonts[_current_font->name()] = _current_font;
 
 		_current_font->install_font(font8x8_basic, G13_FontChar::FF_ROTATE, 0);
 
-		FontPtr fiveXeight(new G13_Font("5x8", 5));
+		const auto fiveXeight = std::make_shared<G13_Font>("5x8", 5);
 		fiveXeight->install_font(font5x8, 0, 32);
 		_fonts[fiveXeight->name()] = fiveXeight;
 	}
@@ -407,7 +407,7 @@ namespace G13 {
 			_id_within_manager(_id),
 			_uinput_fid(-1),
 			ctx(0) {
-		_current_profile = ProfilePtr(new G13_Profile(*this, "default", "default"));
+		_current_profile = std::make_shared<G13_Profile>(*this, "default", "default");
 		_profiles["default"] = _current_profile;
 
 		for (int i = 0; i < sizeof(keys); i++)
@@ -446,7 +446,7 @@ namespace G13 {
 	ProfilePtr G13_Device::profile(const std::string& id, const std::string& name) {
 		ProfilePtr rv = _profiles[id];
 		if (!rv) {
-			rv = ProfilePtr(new G13_Profile(*_current_profile, id, name.empty() ? id : name));
+			rv = std::make_shared<G13_Profile>(*_current_profile, id, name.empty() ? id : name);
 			_profiles[id] = rv;
 		}
 		return rv;
@@ -631,11 +631,11 @@ namespace G13 {
 			throw G13_CommandException("empty action string");
 		}
 		if (action[0] == '>') {
-			return G13_ActionPtr(new G13_Action_PipeOut(*this, _logger, &action[1]));
+			return std::make_shared<G13_Action_PipeOut>(*this, _logger, &action[1]);
 		} else if (action[0] == '!') {
-			return G13_ActionPtr(new G13_Action_Command(*this, _logger, &action[1]));
+			return std::make_shared<G13_Action_Command>(*this, _logger, &action[1]);
 		} else {
-			return G13_ActionPtr(new G13_Action_Keys(*this, _logger, action));
+			return std::make_shared<G13_Action_Keys>(*this, _logger, action);
 		}
 		throw G13_CommandException("can't create action for " + action);
 	}
@@ -653,7 +653,7 @@ namespace G13 {
 	void G13_Device::_init_apps() {
 		// Bind BD key to switch apps
 		if (auto gkey = current_profile().find_key("BD")) {
-			gkey->set_action(G13_ActionPtr(new G13_Action_AppChange(*this, _logger)));
+			gkey->set_action(std::make_shared<G13_Action_AppChange>(*this, _logger));
 		}
 
 		// Default time/profile display
