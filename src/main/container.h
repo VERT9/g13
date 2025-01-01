@@ -19,6 +19,10 @@
  */
 class Container {
 	public:
+		~Container() {
+			factoryMap.clear();
+		};
+
 		template <typename T>
 		using Generator = std::function<std::shared_ptr<T>()>;
 
