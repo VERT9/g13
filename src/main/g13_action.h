@@ -5,8 +5,6 @@
 #ifndef G13_G13_ACTION_H
 #define G13_G13_ACTION_H
 
-#include <boost/shared_ptr.hpp>
-#include <ostream>
 #include <vector>
 #include <string>
 
@@ -111,7 +109,7 @@ namespace G13 {
 			std::function<void()> _action;
 	};
 
-	typedef boost::shared_ptr<G13_Action> G13_ActionPtr;
+	typedef std::shared_ptr<G13_Action> G13_ActionPtr;
 
 	// *************************************************************************
 	template<class PARENT_T>

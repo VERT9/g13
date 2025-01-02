@@ -18,11 +18,10 @@ namespace G13 {
 		_stick_mode = STICK_KEYS;
 
 		auto add_zone = [this, &keypad, &logger](const std::string& name, double x1, double y1, double x2, double y2) {
-			_zones.push_back(G13_StickZone(*this, "STICK_" + name,
+			_zones.emplace_back(*this, "STICK_" + name,
 										   G13_ZoneBounds(x1, y1, x2, y2),
-										   G13_ActionPtr(
-												   new G13_Action_Keys(keypad, logger, "KEY_" + name))
-							 )
+										   std::make_shared<G13_Action_Keys>(keypad, logger, "KEY_" + name)
+
 			);
 		};
 
@@ -35,14 +34,14 @@ namespace G13 {
 	}
 
 	G13_StickZone* G13_Stick::zone(const std::string& name, bool create) {
+		for (auto& zone : _zones) {
+			if (zone.name() == name) {
+				return &zone;
+			}
+		}
 
-		BOOST_FOREACH(G13_StickZone& zone, _zones) {
-						if (zone.name() == name) {
-							return &zone;
-						}
-					}
 		if (create) {
-			_zones.push_back(G13_StickZone(*this, name, G13_ZoneBounds(0.0, 0.0, 0.0, 0.0)));
+			_zones.emplace_back(*this, name, G13_ZoneBounds(0.0, 0.0, 0.0, 0.0));
 			return zone(name);
 		}
 		return 0;
@@ -71,10 +70,10 @@ namespace G13 {
 	}
 
 	void G13_Stick::dump(std::ostream& out) const {
-		BOOST_FOREACH(const G13_StickZone& zone, _zones) {
-						zone.dump(out);
-						out << endl;
-					}
+		for (auto& zone : _zones) {
+			zone.dump(out);
+			out << endl;
+		}
 	}
 
 	G13_StickCoord G13_Stick::getCurrentPos() {
@@ -137,11 +136,9 @@ namespace G13 {
 			_keypad.send_event(EV_ABS, ABS_X, _current_pos.x);
 			_keypad.send_event(EV_ABS, ABS_Y, _current_pos.y);
 		} else if (_stick_mode == STICK_KEYS) {
-
-			BOOST_FOREACH(G13_StickZone& zone, _zones) {
-							zone.test(jpos);
-						}
-			return;
+			for (auto& zone : _zones) {
+				zone.test(jpos);
+			}
 		} else {
 			/*    send_event(g13->uinput_file, EV_REL, REL_X, stick_x/16 - 8);
 			 send_event(g13->uinput_file, EV_REL, REL_Y, stick_y/16 - 8);*/

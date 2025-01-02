@@ -7,8 +7,6 @@
 #include "g13_device.h"
 #include "g13_action.h"
 
-#include <linux/uinput.h>
-
 #include <utility>
 
 using Helper::repr;
@@ -25,10 +23,9 @@ namespace G13 {
 	G13_Action::~G13_Action() {}
 
 	G13_Action_Keys::G13_Action_Keys(G13_Device& keypad, G13_Log& logger, const std::string& keys_string) : G13_Action(keypad, logger) {
-		std::vector<std::string> keys;
-		boost::split(keys, keys_string, boost::is_any_of("+"));
-
-		BOOST_FOREACH(std::string const& key, keys) {
+		std::stringstream buffer(keys_string);
+		std::string key;
+		while (getline(buffer, key, '+')) {
 			auto kval = manager().find_input_key_value(key);
 			if (kval == BAD_KEY_VALUE) {
 				throw G13_CommandException("create action unknown key : " + key);

@@ -5,13 +5,10 @@
 #ifndef G13_G13_DEVICE_H
 #define G13_G13_DEVICE_H
 
-#include <ostream>
 #include <string>
 #include <map>
 #include <libusb-1.0/libusb.h>
 #include <linux/uinput.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 
 #include "G13_DisplayApp.h"
 #include "g13_lcd.h"
@@ -24,9 +21,9 @@ namespace G13 {
 	class G13_Font;
 	class G13_DisplayApp;
 
-	typedef boost::shared_ptr<G13_Action> G13_ActionPtr;
-	typedef boost::shared_ptr<G13_Font> FontPtr;
-	typedef boost::shared_ptr<G13_Profile> ProfilePtr;
+	typedef std::shared_ptr<G13_Action> G13_ActionPtr;
+	typedef std::shared_ptr<G13_Font> FontPtr;
+	typedef std::shared_ptr<G13_Profile> ProfilePtr;
 
 	const size_t G13_INTERFACE = 0;
 	const size_t G13_KEY_ENDPOINT = 1;
@@ -95,7 +92,7 @@ namespace G13 {
 
 		int id_within_manager() const { return _id_within_manager; }
 
-		typedef boost::function<void(const char*)> COMMAND_FUNCTION;
+		typedef std::function<void(const char*)> COMMAND_FUNCTION;
 		typedef std::map<std::string, COMMAND_FUNCTION> CommandFunctionTable;
 
 		std::string describe_libusb_error_code(int code);

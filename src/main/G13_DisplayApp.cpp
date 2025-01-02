@@ -6,6 +6,16 @@
 #include "g13_profile.h"
 
 namespace G13 {
+	void G13_DisplayApp::init(G13_Device& device) {
+		// Disable LIGHT keys in case they've been assigned in other apps
+		for (int i = 1; i <= 4; i++) {
+			const auto gkey = device.current_profile().find_key("L"+std::to_string(i));
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+				// Do Nothing
+			}));
+		}
+	}
+
 	void G13_CurrentProfileApp::display(G13_Device& device) {
 		// Clear screen first
 		device.lcd().image_clear();
@@ -56,7 +66,7 @@ namespace G13 {
 	void G13_ProfileSwitcherApp::init(G13_Device& device) {
 		// L1: Decrease index, move up the list
 		if (auto gkey = device.current_profile().find_key("L1")) {
-			gkey->set_action(G13_ActionPtr(new G13_Action_Dynamic(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
 				if (selected_profile > 0) {
 					selected_profile--;
 					if (selected_profile - profile_display_start == 0 && profile_display_start != 0)
@@ -65,12 +75,12 @@ namespace G13 {
 					selected_profile = device.get_profiles().size() - 1;
 					profile_display_start = device.get_profiles().size() - 4;
 				}
-			})));
+			}));
 		}
 
 		// L2: Increase index, move down the list
 		if (auto gkey = device.current_profile().find_key("L2")) {
-			gkey->set_action(G13_ActionPtr(new G13_Action_Dynamic(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
 				if (const unsigned long size = device.get_profiles().size(); selected_profile < size - 1) {
 					selected_profile++;
 					if (selected_profile - profile_display_start > 3)
@@ -79,19 +89,19 @@ namespace G13 {
 					selected_profile = 0;
 					profile_display_start = 0;
 				}
-			})));
+			}));
 		}
 
 		// Do nothing for L3
 		if (auto gkey = device.current_profile().find_key("L3")) {
-			gkey->set_action(G13_ActionPtr(new G13_Action_Dynamic(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
 				// Do Nothing
-			})));
+			}));
 		}
 
 		// L4: Select profile, make active
 		if (auto gkey = device.current_profile().find_key("L4")) {
-			gkey->set_action(G13_ActionPtr(new G13_Action_Dynamic(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
 				// Get list of profiles, formatted in indexable vector
 				std::map<std::string, ProfilePtr> profiles = device.get_profiles();
 				std::vector<std::pair<std::string, ProfilePtr>> p(profiles.begin(), profiles.end());
@@ -99,7 +109,7 @@ namespace G13 {
 				device.switch_to_profile(p[selected_profile].first);
 				// Reinit app to reapply LIGHT keys
 				init(device);
-			})));
+			}));
 		}
 	}
 

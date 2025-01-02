@@ -28,10 +28,10 @@ namespace G13 {
 			virtual void display(G13_Device& device) = 0;
 
 			/**
-			 * @brief Initializes the app allowing for setup such as actions for LIGHT keys
+			 * @brief Initializes the app allowing for setup such as actions for LIGHT keys. By default, all keys will do nothing when pressed, so this must be overridden to assign an action.
 			 * @param device the device to send display updates to
 			 */
-			virtual void init(G13_Device& device) = 0;
+			virtual void init(G13_Device& device);
 
 		protected:
 			std::shared_ptr<G13_Log> _logger;
@@ -46,7 +46,6 @@ namespace G13 {
 			~G13_CurrentProfileApp() override = default;
 
 			void display(G13_Device& device) override;
-			void init(G13_Device& device) override {};
 		private:
 			unsigned int name_start = 0;
 			int direction = 1;
@@ -77,7 +76,6 @@ namespace G13 {
 			~G13_TesterApp() override = default;
 
 			void display(G13_Device& device) override;
-			void init(G13_Device& device) override {};
 	};
 }
 
