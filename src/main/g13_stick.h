@@ -40,8 +40,6 @@ namespace G13 {
 		G13_ZoneBounds _bounds;
 	};
 
-	typedef boost::shared_ptr<G13_StickZone> G13_StickZonePtr;
-
 // *************************************************************************
 
 	class G13_Stick {

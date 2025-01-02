@@ -10,7 +10,6 @@
 #include <set>
 
 #include <linux/input.h>
-#include <boost/log/core/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_logger.hpp>

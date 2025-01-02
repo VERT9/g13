@@ -5,7 +5,6 @@
 #ifndef G13_G13_FONTS_H
 #define G13_G13_FONTS_H
 
-#include <boost/shared_ptr.hpp>
 #include <cstring>
 #include <string>
 
