@@ -31,10 +31,7 @@
 #ifndef __HELPER_HPP__
 #define __HELPER_HPP__
 
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/preprocessor/seq.hpp>
 
 #include <iostream>
 #include <iomanip>

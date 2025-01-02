@@ -4,12 +4,13 @@
 
 #include "helper.h"
 
-#include <boost/foreach.hpp>
 #include <fcntl.h>
 #include <fstream>
 #include <libusb-1.0/libusb.h>
 #include <linux/uinput.h>
 #include <string>
+#include <vector>
+#include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -127,19 +128,23 @@ namespace G13 {
 	}
 
 	std::string G13_Device::describe_libusb_error_code(int code) {
-		#define TEST_libusb_error(r, data, elem)                               \
-        case BOOST_PP_CAT( LIBUSB_, elem ) :                                   \
-            return BOOST_PP_STRINGIZE( elem );                                 \
-
 		switch (code) {
-			BOOST_PP_SEQ_FOR_EACH(TEST_libusb_error, _,
-								  (SUCCESS)(ERROR_IO)(ERROR_INVALID_PARAM)(ERROR_ACCESS)
-										  (ERROR_NO_DEVICE)(ERROR_NOT_FOUND)(ERROR_BUSY)
-										  (ERROR_TIMEOUT)(ERROR_OVERFLOW)(ERROR_PIPE)
-										  (ERROR_INTERRUPTED)(ERROR_NO_MEM)(ERROR_NOT_SUPPORTED)
-										  (ERROR_OTHER))
+			case LIBUSB_SUCCESS: return "SUCCESS";
+			case LIBUSB_ERROR_IO: return "ERROR_IO";
+			case LIBUSB_ERROR_INVALID_PARAM: return "ERROR_INVALID_PARAM";
+			case LIBUSB_ERROR_ACCESS: return "ERROR_ACCESS";
+			case LIBUSB_ERROR_NO_DEVICE: return "ERROR_NO_DEVICE";
+			case LIBUSB_ERROR_NOT_FOUND: return "ERROR_NOT_FOUND";
+			case LIBUSB_ERROR_BUSY: return "ERROR_BUSY";
+			case LIBUSB_ERROR_TIMEOUT: return "ERROR_TIMEOUT";
+			case LIBUSB_ERROR_OVERFLOW: return "ERROR_OVERFLOW";
+			case LIBUSB_ERROR_PIPE: return "ERROR_PIPE";
+			case LIBUSB_ERROR_INTERRUPTED: return "ERROR_INTERRUPTED";
+			case LIBUSB_ERROR_NO_MEM: return "ERROR_NO_MEM";
+			case LIBUSB_ERROR_NOT_SUPPORTED: return "ERROR_NOT_SUPPORTED";
+			case LIBUSB_ERROR_OTHER: return "ERROR_OTHER";
+			default: return "unknown error";
 		}
-		return "unknown error";
 	}
 
 	void G13_Device::init_lcd() {
@@ -372,7 +377,6 @@ namespace G13 {
 	}
 
 	void G13_Device::read_commands() {
-
 		fd_set set;
 		FD_ZERO(&set);
 		FD_SET(_input_pipe_fid, &set);
@@ -390,18 +394,13 @@ namespace G13 {
 				lcd().image(buf, ret);
 			} else {
 				std::string buffer = reinterpret_cast<const char*>(buf);
-				std::vector<std::string> lines;
-				boost::split(lines, buffer, boost::is_any_of("\n\r"));
-
-				BOOST_FOREACH(std::string const& cmd, lines) {
-								std::vector<std::string> command_comment;
-								boost::split(command_comment, cmd, boost::is_any_of("#"));
-
-								if (command_comment.size() > 0 && command_comment[0] != std::string("")) {
-									_logger.info("command: " + command_comment[0]);
-									command(command_comment[0].c_str());
-								}
-							}
+				std::stringstream lines(buffer);
+				std::string line;
+				while (getline(lines, line, '\n')) {
+					std::string cmd = line.substr(0, line.find('#'));
+					_logger.info("command: " + cmd);
+					command(cmd.c_str());
+				}
 			}
 		}
 	}

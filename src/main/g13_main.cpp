@@ -1,7 +1,6 @@
 #include "g13_manager.h"
 
 #include <iostream>
-#include <boost/foreach.hpp>
 #include <boost/program_options.hpp>
 
 #include "container.h"
@@ -62,23 +61,23 @@ int main(int argc, char* argv[]) {
 	po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 	po::notify(vm);
 
-	if (vm.count("help")) {
+	if (vm.contains("help")) {
 		cout << argv[0] << " : user space G13 driver" << endl;
 		cout << desc << "\n";
 		return 1;
 	}
 
-	BOOST_FOREACH(const string& tag, sopt_names) {
-					if (vm.count(tag)) {
-						manager->set_string_config_value(tag, vm[tag].as<string>());
-					}
-				}
+	for (const auto& tag : sopt_names) {
+		if (vm.contains(tag)) {
+			manager->set_string_config_value(tag, vm[tag].as<string>());
+		}
+	}
 
-	if (vm.count("logo")) {
+	if (vm.contains("logo")) {
 		manager->set_logo(vm["logo"].as<string>());
 	}
 
-	if (vm.count("log_level")) {
+	if (vm.contains("log_level")) {
 		Container::Instance().Resolve<G13_Log>()->set_log_level(manager->string_config_value("log_level"));
 	}
 

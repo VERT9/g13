@@ -2,8 +2,8 @@
 // Created by vert9 on 11/23/23.
 //
 
+#include <boost/preprocessor/seq.hpp>
 #include <ostream>
-#include <boost/foreach.hpp>
 #include "helper.h"
 #include "g13_manager.h"
 #include "g13_device.h"
@@ -43,13 +43,13 @@ namespace G13 {
 
 	void G13_Profile::dump(std::ostream& o) const {
 		o << "Profile " << repr(name()) << std::endl;
-		BOOST_FOREACH(const G13_Key& key, _keys) {
-						if (key.action()) {
-							o << "   ";
-							key.dump(o);
-							o << std::endl;
-						}
-					}
+		for (const auto& key : _keys) {
+			if (key.action()) {
+				o << "   ";
+				key.dump(o);
+				o << std::endl;
+			}
+		}
 	}
 
 	void G13_Profile::parse_keys(unsigned char* buf) {

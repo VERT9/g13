@@ -3,6 +3,8 @@
 //
 
 #include "helper.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/preprocessor/seq.hpp>
 #include <csignal>
 #include <format>
 #include <wordexp.h>
@@ -10,12 +12,6 @@
 #include <set>
 
 #include <linux/input.h>
-#include <boost/log/expressions.hpp>
-#include <boost/log/sources/severity_feature.hpp>
-#include <boost/log/sources/severity_logger.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup.hpp>
-#include <boost/log/utility/setup/console.hpp>
 #include <pugixml.hpp>
 #include <utility>
 
