@@ -9,7 +9,6 @@
 #include <map>
 #include <libusb-1.0/libusb.h>
 #include <linux/uinput.h>
-#include <boost/function.hpp>
 
 #include "G13_DisplayApp.h"
 #include "g13_lcd.h"
@@ -93,7 +92,7 @@ namespace G13 {
 
 		int id_within_manager() const { return _id_within_manager; }
 
-		typedef boost::function<void(const char*)> COMMAND_FUNCTION;
+		typedef std::function<void(const char*)> COMMAND_FUNCTION;
 		typedef std::map<std::string, COMMAND_FUNCTION> CommandFunctionTable;
 
 		std::string describe_libusb_error_code(int code);
