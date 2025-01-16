@@ -8,7 +8,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "g13_keys.h"
+
+#include "g13_key_map.h"
 
 namespace G13 {
 	class G13_Key;
@@ -23,24 +24,27 @@ namespace G13 {
 	 */
 	class G13_Profile {
 	public:
-		G13_Profile(G13_Device& keypad, std::string  guid, std::string  name = "") :
-				_keypad(keypad), _guid(std::move(guid)), _name(std::move(name)) { _init_keys(); }
+		G13_Profile(std::string guid, std::string  name = "") :
+				_name(std::move(name)), _guid(std::move(guid)) {
+			_keymap = Container::Instance().Resolve<G13_KeyMap>();
+			_init_keys();
+		}
 		G13_Profile(const G13_Profile& other, std::string  guid, std::string  name = "") :
-				_keypad(other._keypad), _guid(std::move(guid)), _name(std::move(name)), _keys(other._keys) {}
+				_keys(other._keys), _name(std::move(name)), _guid(std::move(guid)) {
+			_keymap = Container::Instance().Resolve<G13_KeyMap>();
+		}
 
 		// search key by G13 keyname
 		G13_Key* find_key(const std::string& keyname);
 
 		void dump(std::ostream& o) const;
 
-		void parse_keys(unsigned char* buf);
+		void parse_keys(unsigned char* buf, G13_Device& device);
 		const std::string& name() const { return _name; }
 		const std::string& guid() const { return _guid; }
 
-		const G13_Manager& manager() const;
-
 	protected:
-		G13_Device& _keypad;
+		std::shared_ptr<G13_KeyMap> _keymap;
 		std::vector<G13_Key> _keys;
 		std::string _name;
 		std::string _guid;
