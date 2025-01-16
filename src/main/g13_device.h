@@ -5,21 +5,27 @@
 #ifndef G13_G13_DEVICE_H
 #define G13_G13_DEVICE_H
 
-#include <string>
+#include <functional>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include <libusb-1.0/libusb.h>
 #include <linux/uinput.h>
 
-#include "G13_DisplayApp.h"
 #include "g13_lcd.h"
-#include "g13_stick.h"
 
 namespace G13 {
-	class G13_Profile;
+	// Forward declarations
 	class G13_Action;
-	class G13_Manager;
-	class G13_Font;
 	class G13_DisplayApp;
+	class G13_Font;
+	class G13_Log;
+	class G13_LCD;
+	class G13_Manager;
+	class G13_Profile;
+	class G13_Stick;
 
 	typedef std::shared_ptr<G13_Action> G13_ActionPtr;
 	typedef std::shared_ptr<G13_Font> FontPtr;
@@ -39,20 +45,19 @@ namespace G13 {
 
 	class G13_Device {
 	public:
-		G13_Device(G13_Manager& manager, G13_Log& logger, libusb_device_handle* handle, int id);
+		G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long id);
 		~G13_Device();
 
-		G13_Manager& manager() { return _manager; }
-		const G13_Manager& manager() const { return _manager; }
+		G13_Device& init();
 
 		G13_LCD& lcd() { return _lcd; }
 		const G13_LCD& lcd() const { return _lcd; }
 
-		G13_Stick& stick() { return _stick; }
-		const G13_Stick& stick() const { return _stick; }
+		G13_Stick& stick() { return *_stick; }
+		const G13_Stick& stick() const { return *_stick; }
 
-		G13_Log& logger() { return _logger; }
-		const G13_Log& logger() const { return _logger; }
+		std::shared_ptr<G13_Log> logger() { return _logger; }
+		const std::shared_ptr<G13_Log> logger() const { return _logger; }
 
 		FontPtr switch_to_font(const std::string& name);
 		void switch_to_profile(const std::string& name);
@@ -82,10 +87,9 @@ namespace G13 {
 
 		// used by G13_Manager
 		void cleanup();
-		void register_context(libusb_context* ctx);
+		std::string make_pipe_name(G13_Manager& manager, bool is_input);
+		void register_context(libusb_context* ctx, G13_Manager& manager);
 		void write_lcd_file(const std::string& filename);
-
-		G13_Font& current_font() { return *_current_font; }
 
 		G13_Profile& current_profile() { return *_current_profile; }
 		std::map<std::string, ProfilePtr> get_profiles() { return _profiles; }
@@ -114,7 +118,6 @@ namespace G13 {
 		void next_app();
 
 	protected:
-		void _init_fonts();
 		void init_lcd();
 		void _init_commands();
 
@@ -127,7 +130,7 @@ namespace G13 {
 
 		struct input_event _event {};
 
-		int _id_within_manager;
+		unsigned long _id_within_manager;
 		libusb_device_handle* handle;
 		libusb_context* ctx;
 
@@ -138,15 +141,12 @@ namespace G13 {
 		int _output_pipe_fid;
 		std::string _output_pipe_name;
 
-		std::map<std::string, FontPtr> _fonts;
-		FontPtr _current_font;
 		std::map<std::string, ProfilePtr> _profiles;
 		ProfilePtr _current_profile;
 
-		G13_Manager& _manager;
-		G13_Log& _logger;
+		std::shared_ptr<G13_Log> _logger;
 		G13_LCD _lcd;
-		G13_Stick _stick;
+		std::shared_ptr<G13_Stick> _stick;
 
 		bool keys[G13_NUM_KEYS];
 
@@ -161,7 +161,7 @@ namespace G13 {
 		/**
 		 * @brief Stores the list of available DisplayApps
 		 */
-		vector<std::shared_ptr<G13_DisplayApp>> _apps;
+		std::vector<std::shared_ptr<G13_DisplayApp>> _apps;
 	private:
 		int g13_create_uinput();
 		int g13_create_fifo(const char* fifo_name);

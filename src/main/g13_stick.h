@@ -5,7 +5,10 @@
 #ifndef G13_G13_STICK_H
 #define G13_G13_STICK_H
 
+#include <memory>
 #include <string>
+#include <vector>
+
 #include "helper.h"
 #include "g13_action.h"
 
@@ -30,7 +33,7 @@ namespace G13 {
 		void dump(std::ostream&) const;
 
 		void parse_key(unsigned char* byte, G13_Device* g13);
-		void test(const G13_ZoneCoord& loc);
+		void test(G13_Device& keypad, const G13_ZoneCoord& loc);
 		void set_bounds(const G13_ZoneBounds& bounds) { _bounds = bounds; }
 
 	protected:
@@ -44,9 +47,9 @@ namespace G13 {
 
 	class G13_Stick {
 	public:
-		G13_Stick(G13_Device& keypad, G13_Log& logger);
+		G13_Stick(std::shared_ptr<G13_Log> logger);
 
-		void parse_joystick(unsigned char* buf);
+		void parse_joystick(G13_Device& keypad, unsigned char* buf);
 
 		void set_mode(stick_mode_t);
 		G13_StickZone* zone(const std::string&, bool create = false);
@@ -64,8 +67,7 @@ namespace G13 {
 
 		void _recalc_calibrated();
 
-		G13_Device& _keypad;
-		G13_Log _logger;
+		std::shared_ptr<G13_Log> _logger;
 		std::vector<G13_StickZone> _zones;
 
 		G13_StickBounds _bounds;

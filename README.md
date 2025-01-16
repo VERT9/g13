@@ -84,27 +84,30 @@ The following options can be used when starting g13d
 | --help              | show help                                       |                  |
 | --logo *arg*        | set logo from file                              |                  |
 | --config *arg*      | load config commands from file                  |                  |
-| --pipe_in *arg*     | specify name for input pipe                     | /tmp/g13-0       |
-| --pipe_out *arg*    | specify name for output pipe                    | /tmp/g13-0_out   |
+| --pipe_in *arg*     | specify directory name for input pipe           | /tmp/g13/in/0    |
+| --pipe_out *arg*    | specify directory name for output pipe          | /tmp/g13/out/0   |
 | --profile_dir *arg* | specify directory for reading Logitech profiles | ~/.g13d/profiles |
 
 ## Configuring / Remote Control
 
 Configuration is accomplished using the commands described in the [Commands] section.
 
-Commands can be loaded from a file specified by the --config option on the command line.  
+Commands can be loaded from a file specified by the `--config` option on the command line.  
 
-Commands can be also be sent to the command input pipe, which is at ***/tmp/g13-0*** by 
+Commands can be also be sent to the command input pipe, which is at ***/tmp/g13/in/0*** by 
 default. Example:
 
     echo rgb 0 255 0 > /tmp/g13-0
+
+When running with the `--pipe_in` or `--pipe_out` option, your file will be appended with `-0-in` or `-0-out` where `0`
+is the internal ID of your device to avoid conflicts if multiple devices are connected.
 
 ### Actions
 
 Various parts of configuring the G13 depend on assigning actions to occur based on something happening to the G13. 
 * key, possible values shown upon startup  (e.g. ***KEY_LEFTSHIFT***).
 * multiple keys,  like ***KEY_LEFTSHIFT+KEY_F1***
-* pipe output, by using ">" followed by text, as in ***>Hello*** - causing **Hello** (plus newline) to be written to the output pipe ( **/tmp/g13-0_out** by default )
+* pipe output, by using ">" followed by text, as in ***>Hello*** - causing **Hello** (plus newline) to be written to the output pipe ( **/tmp/g13/out/0** by default )
 * command, by using "!" followed by text, as in ***!stick_mode KEYS*** 
 
 ## Commands

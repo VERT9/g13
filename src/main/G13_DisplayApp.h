@@ -4,21 +4,21 @@
 
 #ifndef G13_DISPLAYAPP_H
 #define G13_DISPLAYAPP_H
+
 #include <chrono>
 #include <utility>
 
-#include "g13_device.h"
-#include "g13_log.h"
-
 namespace G13 {
 	class G13_Device;
+	class G13_KeyMap;
+	class G13_Log;
 
 	/**
 	 * @brief Base interface for a DisplayApp
 	 */
 	class G13_DisplayApp {
 		public:
-			explicit G13_DisplayApp(std::shared_ptr<G13_Log> logger) : _logger(std::move(logger)){}
+			explicit G13_DisplayApp(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap) : _logger(std::move(logger)), _keymap(std::move(keymap)){}
 			virtual ~G13_DisplayApp() = default;
 
 			/**
@@ -35,6 +35,7 @@ namespace G13 {
 
 		protected:
 			std::shared_ptr<G13_Log> _logger;
+			std::shared_ptr<G13_KeyMap> _keymap;
 	};
 
 	/**
@@ -42,7 +43,7 @@ namespace G13 {
 	 */
 	class G13_CurrentProfileApp final : public G13_DisplayApp {
 		public:
-			explicit G13_CurrentProfileApp(std::shared_ptr<G13_Log> logger) : G13_DisplayApp(std::move(logger)){}
+			explicit G13_CurrentProfileApp(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap) : G13_DisplayApp(std::move(logger), std::move(keymap)){}
 			~G13_CurrentProfileApp() override = default;
 
 			void display(G13_Device& device) override;
@@ -57,7 +58,7 @@ namespace G13 {
 	 */
 	class G13_ProfileSwitcherApp final : public G13_DisplayApp {
 		public:
-			explicit G13_ProfileSwitcherApp(std::shared_ptr<G13_Log> logger) : G13_DisplayApp(std::move(logger)) {}
+			explicit G13_ProfileSwitcherApp(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap) : G13_DisplayApp(std::move(logger), std::move(keymap)) {}
 			~G13_ProfileSwitcherApp() override = default;
 
 			void display(G13_Device& device) override;
@@ -72,7 +73,7 @@ namespace G13 {
 	 */
 	class G13_TesterApp final : public G13_DisplayApp {
 		public:
-			explicit G13_TesterApp(std::shared_ptr<G13_Log> logger) : G13_DisplayApp(std::move(logger)){}
+			explicit G13_TesterApp(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap) : G13_DisplayApp(std::move(logger), std::move(keymap)){}
 			~G13_TesterApp() override = default;
 
 			void display(G13_Device& device) override;

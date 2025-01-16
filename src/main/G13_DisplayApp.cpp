@@ -3,14 +3,17 @@
 //
 
 #include "G13_DisplayApp.h"
+#include "g13_device.h"
+#include "g13_keys.h"
 #include "g13_profile.h"
+#include "g13_stick.h"
 
 namespace G13 {
 	void G13_DisplayApp::init(G13_Device& device) {
 		// Disable LIGHT keys in case they've been assigned in other apps
 		for (int i = 1; i <= 4; i++) {
 			const auto gkey = device.current_profile().find_key("L"+std::to_string(i));
-			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
 				// Do Nothing
 			}));
 		}
@@ -66,7 +69,7 @@ namespace G13 {
 	void G13_ProfileSwitcherApp::init(G13_Device& device) {
 		// L1: Decrease index, move up the list
 		if (auto gkey = device.current_profile().find_key("L1")) {
-			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
 				if (selected_profile > 0) {
 					selected_profile--;
 					if (selected_profile - profile_display_start == 0 && profile_display_start != 0)
@@ -80,7 +83,7 @@ namespace G13 {
 
 		// L2: Increase index, move down the list
 		if (auto gkey = device.current_profile().find_key("L2")) {
-			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
 				if (const unsigned long size = device.get_profiles().size(); selected_profile < size - 1) {
 					selected_profile++;
 					if (selected_profile - profile_display_start > 3)
@@ -94,14 +97,14 @@ namespace G13 {
 
 		// Do nothing for L3
 		if (auto gkey = device.current_profile().find_key("L3")) {
-			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
 				// Do Nothing
 			}));
 		}
 
 		// L4: Select profile, make active
 		if (auto gkey = device.current_profile().find_key("L4")) {
-			gkey->set_action(std::make_shared<G13_Action_Dynamic>(device, *_logger, [&] {
+			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
 				// Get list of profiles, formatted in indexable vector
 				std::map<std::string, ProfilePtr> profiles = device.get_profiles();
 				std::vector<std::pair<std::string, ProfilePtr>> p(profiles.begin(), profiles.end());

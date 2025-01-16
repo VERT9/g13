@@ -31,13 +31,9 @@
 #ifndef __HELPER_HPP__
 #define __HELPER_HPP__
 
-#include <boost/algorithm/string.hpp>
-
-#include <iostream>
-#include <iomanip>
-
+#include <cstring>
 #include <exception>
-
+#include <iomanip>
 #include <string>
 #include <map>
 
@@ -138,7 +134,7 @@ std::ostream &operator<<( std::ostream &o, const Bounds<T> &b ) {
 
 typedef const char * CCP;
 inline const char *advance_ws(CCP &source, std::string &dest) {
-	const char *space = source ? strchr(source, ' ') : 0;
+	const char *space = source ? std::strchr(source, ' ') : 0;
 	if (space) {
 		dest = std::string(source, space - source);
 		source = space + 1;
@@ -147,35 +143,6 @@ inline const char *advance_ws(CCP &source, std::string &dest) {
 		source = 0;
 	}
 	return source;
-};
-
-// *************************************************************************
-
-template <class MAP_T>
-struct _map_keys_out {
-	_map_keys_out( const MAP_T&c, const std::string &s ) : container(c), sep(s) {}
-	const MAP_T&container;
-	std::string sep;
-};
-
-template <class STREAM_T, class MAP_T>
-STREAM_T &operator <<( STREAM_T &o, const _map_keys_out<MAP_T> &_mko ) {
-	bool first = true;
-	for( auto i = _mko.container.begin(); i != _mko.container.end(); i++ ) {
-		if( first ) {
-			first = false;
-			o << i->first;
-		} else {
-			o << _mko.sep << i->first;
-		}
-	}
-
-    return o;
-};
-
-template <class MAP_T>
-_map_keys_out<MAP_T> map_keys_out( const MAP_T &c, const std::string &sep = " " ) {
-	return _map_keys_out<MAP_T>( c, sep );
 };
 
 // *************************************************************************

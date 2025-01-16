@@ -5,6 +5,8 @@
 
 #include "container.h"
 #include "G13_DisplayApp.h"
+#include "g13_action.h"
+#include "g13_key_map.h"
 
 using namespace std;
 using namespace G13;
@@ -16,21 +18,37 @@ namespace po = boost::program_options;
 void bootFramework() {
 	auto& ioc = Container::Instance();
 
-	ioc.RegisterFactory<G13_Log>([&] {
-		return std::make_shared<G13_Log>();
+	ioc.RegisterFactory<G13_Log>([&](auto arg1, auto arg2, auto arg3) {
+		return G13_Log::get();
 	});
-	ioc.RegisterFactory<G13_Manager>([&] {
-		return std::make_shared<G13_Manager>(ioc.Resolve<G13_Log>());
+	ioc.RegisterFactory<G13_Manager>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_Manager>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>());
 	});
-	ioc.RegisterFactory<G13_CurrentProfileApp>([&] {
-		return std::make_shared<G13_CurrentProfileApp>(ioc.Resolve<G13_Log>());
+	ioc.RegisterFactory<G13_CurrentProfileApp>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_CurrentProfileApp>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>());
 	});
-	ioc.RegisterFactory<G13_ProfileSwitcherApp>([&] {
-		return std::make_shared<G13_ProfileSwitcherApp>(ioc.Resolve<G13_Log>());
+	ioc.RegisterFactory<G13_ProfileSwitcherApp>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_ProfileSwitcherApp>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>());
 	});
-	ioc.RegisterFactory<G13_TesterApp>([&] {
-		return std::make_shared<G13_TesterApp>(ioc.Resolve<G13_Log>());
+	ioc.RegisterFactory<G13_TesterApp>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_TesterApp>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>());
 	});
+	ioc.RegisterFactory<G13_KeyMap>([&](auto arg1, auto arg2, auto arg3) {
+		return G13_KeyMap::get();
+	});
+	ioc.RegisterFactory<G13_Action_Keys>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_Action_Keys>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>(), std::any_cast<std::string>(arg1));
+	});
+	ioc.RegisterFactory<G13_Action_Command>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_Action_Command>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>(), std::any_cast<std::string>(arg1));
+	});
+	ioc.RegisterFactory<G13_Action_PipeOut>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_Action_PipeOut>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>(), std::any_cast<std::string>(arg1));
+	});
+	ioc.RegisterFactory<G13_Action_AppChange>([&](auto arg1, auto arg2, auto arg3) {
+		return std::make_shared<G13_Action_AppChange>(ioc.Resolve<G13_Log>(), ioc.Resolve<G13_KeyMap>());
+	});
+
 	//TODO register logger and other services
 }
 

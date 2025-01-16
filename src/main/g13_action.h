@@ -5,11 +5,12 @@
 #ifndef G13_G13_ACTION_H
 #define G13_G13_ACTION_H
 
-#include <vector>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "container.h"
-#include "g13_manager.h"
+#include "g13_key_map.h"
 
 namespace G13 {
 	class G13_Device;
@@ -19,26 +20,16 @@ namespace G13 {
 	 */
 	class G13_Action {
 	public:
-		G13_Action(G13_Device& keypad, G13_Log& logger) : _keypad(keypad), _logger(logger) {}
+		G13_Action(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap) : _logger(std::move(logger)), _keymap(std::move(keymap)) {}
 
-		virtual ~G13_Action();
+		virtual ~G13_Action() = default;
 
-		virtual void act(G13_Device&, bool is_down) = 0;
+		virtual void act(bool is_down, G13_Device& device) = 0;
 		virtual void dump(std::ostream&) const = 0;
 
-		void act(bool is_down) { act(keypad(), is_down); }
-
-		G13_Device& keypad() { return _keypad; }
-		const G13_Device& keypad() const { return _keypad; }
-
-		G13_Manager& manager();
-		const G13_Manager& manager() const;
-
 	protected:
-		G13_Log _logger;
-
-	private:
-		G13_Device& _keypad;
+		std::shared_ptr<G13_Log> _logger;
+		std::shared_ptr<G13_KeyMap> _keymap;
 	};
 
 	/*!
@@ -46,10 +37,9 @@ namespace G13 {
 	 */
 	class G13_Action_Keys : public G13_Action {
 	public:
-		G13_Action_Keys(G13_Device& keypad, G13_Log& logger, const std::string& keys);
-		virtual ~G13_Action_Keys();
+		G13_Action_Keys(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap, std::string keys);
 
-		virtual void act(G13_Device&, bool is_down);
+		void act(bool is_down, G13_Device& device) override;
 		virtual void dump(std::ostream&) const;
 
 		std::vector<LINUX_KEY_VALUE> _keys;
@@ -60,10 +50,9 @@ namespace G13 {
 	 */
 	class G13_Action_PipeOut : public G13_Action {
 	public:
-		G13_Action_PipeOut(G13_Device& keypad, G13_Log& logger, const std::string& out);
-		virtual ~G13_Action_PipeOut();
+		G13_Action_PipeOut(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap, std::string out);
 
-		virtual void act(G13_Device&, bool is_down);
+		void act(bool is_down, G13_Device& device) override;
 		virtual void dump(std::ostream&) const;
 
 		std::string _out;
@@ -74,10 +63,9 @@ namespace G13 {
 	 */
 	class G13_Action_Command : public G13_Action {
 		public:
-		G13_Action_Command(G13_Device& keypad, G13_Log& logger, const std::string& cmd);
-		virtual ~G13_Action_Command();
+		G13_Action_Command(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap, std::string cmd);
 
-		virtual void act(G13_Device&, bool is_down);
+		void act(bool is_down, G13_Device& device) override;
 		virtual void dump(std::ostream&) const;
 
 		std::string _cmd;
@@ -88,11 +76,13 @@ namespace G13 {
 	 */
 	class G13_Action_AppChange : public G13_Action {
 		public:
-			G13_Action_AppChange(G13_Device& keypad, G13_Log& logger):G13_Action(keypad, logger) {};
-			~G13_Action_AppChange() override = default;
+			G13_Action_AppChange(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap):G13_Action(std::move(logger), std::move(keymap)) {};
 
-			void act(G13_Device&, bool is_down) override;
+			void act(bool is_down, G13_Device& device) override;
 			void dump(std::ostream&) const override;
+
+		protected:
+			unsigned int _current_app = 0;
 	};
 
 	/**
@@ -100,10 +90,9 @@ namespace G13 {
 	 */
 	class G13_Action_Dynamic : public G13_Action {
 		public:
-			G13_Action_Dynamic(G13_Device& keypad, G13_Log& logger, std::function<void()> action);
-			~G13_Action_Dynamic() override = default;
+			G13_Action_Dynamic(std::shared_ptr<G13_Log> logger, std::shared_ptr<G13_KeyMap> keymap, std::function<void()> action);
 
-			void act(G13_Device&, bool is_down) override;
+			void act(bool is_down, G13_Device& device) override;
 			void dump(std::ostream&) const override;
 		private:
 			std::function<void()> _action;
@@ -117,6 +106,7 @@ namespace G13 {
 		public:
 			G13_Actionable(PARENT_T& parent_arg, const std::string& name) : _parent_ptr(&parent_arg), _name(name) {
 				_logger = Container::Instance().Resolve<G13_Log>();
+				_keymap = Container::Instance().Resolve<G13_KeyMap>();
 			}
 			virtual ~G13_Actionable() { _parent_ptr = 0; }
 
@@ -127,9 +117,6 @@ namespace G13 {
 			PARENT_T& parent() { return *_parent_ptr; }
 			const PARENT_T& parent() const { return *_parent_ptr; }
 
-			G13_Manager& manager() { return _parent_ptr->manager(); }
-			const G13_Manager& manager() const { return _parent_ptr->manager(); }
-
 			virtual void set_action(const G13_ActionPtr& action) {
 				_action = action;
 			}
@@ -138,6 +125,7 @@ namespace G13 {
 			std::string _name;
 			G13_ActionPtr _action;
 			std::shared_ptr<G13_Log> _logger;
+			std::shared_ptr<G13_KeyMap> _keymap;
 
 		private:
 			PARENT_T* _parent_ptr;
