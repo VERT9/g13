@@ -1,27 +1,27 @@
 /*
  * This file contains code for managing keys and profiles
  */
-#include "g13_stick.h"
+
 #include "g13_device.h"
 #include "g13_log.h"
-#include <linux/uinput.h>
+#include "g13_stick.h"
 
 using namespace std;
 
 namespace G13 {
-	G13_Stick::G13_Stick(G13_Device& keypad, G13_Log& logger) :
-			_keypad(keypad),
-			_logger(logger),
+	G13_Stick::G13_Stick(std::shared_ptr<G13_Log> logger) :
+			_logger(std::move(logger)),
 			_bounds(0, 0, 255, 255),
 			_center_pos(127, 127),
 			_north_pos(127, 0) {
 		_stick_mode = STICK_KEYS;
 
-		auto add_zone = [this, &keypad, &logger](const std::string& name, double x1, double y1, double x2, double y2) {
+		auto add_zone = [this](const std::string& name, double x1, double y1, double x2, double y2) {
+			auto key = "KEY_" + name;
+			std::shared_ptr<G13_Action_Keys> action = Container::Instance().Resolve<G13_Action_Keys>(key);
 			_zones.emplace_back(*this, "STICK_" + name,
 										   G13_ZoneBounds(x1, y1, x2, y2),
-										   std::make_shared<G13_Action_Keys>(keypad, logger, "KEY_" + name)
-
+										   action
 			);
 		};
 
@@ -108,7 +108,7 @@ namespace G13 {
 		return dy;
 	}
 
-	void G13_Stick::parse_joystick(unsigned char* buf) {
+	void G13_Stick::parse_joystick(G13_Device& keypad, unsigned char* buf) {
 
 		_current_pos.x = buf[1];
 		_current_pos.y = buf[2];
@@ -130,14 +130,14 @@ namespace G13 {
 		double dx = getDX();
 		double dy = getDY();
 
-		_logger.trace("x=" + std::to_string(_current_pos.x) + " y=" + std::to_string(_current_pos.y) + " dx=" + std::to_string(dx) + " dy=" + std::to_string(dy));
+		_logger->trace(std::format("x={} y={} dx={} dy={}", std::to_string(_current_pos.x), std::to_string(_current_pos.y), std::to_string(dx), std::to_string(dy)));
 		G13_ZoneCoord jpos(dx, dy);
 		if (_stick_mode == STICK_ABSOLUTE) {
-			_keypad.send_event(EV_ABS, ABS_X, _current_pos.x);
-			_keypad.send_event(EV_ABS, ABS_Y, _current_pos.y);
+			keypad.send_event(EV_ABS, ABS_X, _current_pos.x);
+			keypad.send_event(EV_ABS, ABS_Y, _current_pos.y);
 		} else if (_stick_mode == STICK_KEYS) {
 			for (auto& zone : _zones) {
-				zone.test(jpos);
+				zone.test(keypad, jpos);
 			}
 		} else {
 			/*    send_event(g13->uinput_file, EV_REL, REL_X, stick_x/16 - 8);
@@ -156,18 +156,18 @@ namespace G13 {
 		}
 	}
 
-	void G13_StickZone::test(const G13_ZoneCoord& loc) {
+	void G13_StickZone::test(G13_Device& keypad, const G13_ZoneCoord& loc) {
 		if (!_action) return;
 		bool prior_active = _active;
 		_active = _bounds.contains(loc);
 		if (!_active) {
 			if (prior_active) {
 				// cout << "exit stick zone " << _name << std::endl;
-				_action->act(false);
+				_action->act(false, keypad);
 			}
 		} else {
 			// cout << "in stick zone " << _name << std::endl;
-			_action->act(true);
+			_action->act(true, keypad);
 		}
 	}
 
