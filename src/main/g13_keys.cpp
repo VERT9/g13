@@ -9,7 +9,7 @@ using namespace std;
 
 namespace G13 {
 	void G13_Key::dump(std::ostream& o) const {
-		o << manager().find_g13_key_name(index()) << "(" << index() << ") : ";
+		o << _keymap->find_g13_key_name(index()) << "(" << index() << ") : ";
 		if (action()) {
 			action()->dump(o);
 		} else {
@@ -25,7 +25,7 @@ namespace G13 {
 			dump(out);
 			_logger->debug(std::format("{}[{}]", out.str(), key_is_down?"DOWN":"UP"));
 			if (_action) {
- 				_action->act(*g13, key_is_down);
+ 				_action->act(key_is_down, *g13);
 			}
 		}
 	}
