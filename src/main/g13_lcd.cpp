@@ -17,9 +17,10 @@
 	 A0.01 A1.01 A2.01 ...
  */
 
+#include "g13_font_constants.h"
+#include "g13_fonts.h"
 #include "g13_device.h"
 #include "g13_lcd.h"
-#include "g13_fonts.h"
 #include "g13_log.h"
 
 using namespace std;
@@ -29,9 +30,23 @@ namespace G13 {
 		cursor_col = 0;
 		cursor_row = 0;
 		text_mode = 0;
+
+		_init_fonts();
+	}
+
+	void G13_LCD::_init_fonts() {
+		_current_font = std::make_shared<G13_Font>("8x8", 8);
+		_fonts[_current_font->name()] = _current_font;
+
+		_current_font->install_font(font8x8_basic, G13_FontChar::FF_ROTATE, 0);
+
+		const auto fiveXeight = std::make_shared<G13_Font>("5x8", 5);
+		fiveXeight->install_font(font5x8, 0, 32);
+		_fonts[fiveXeight->name()] = fiveXeight;
 	}
 
 	void G13_LCD::image(unsigned char* data, int size) {
+		// TODO remove circular referencing
 		_keypad.write_lcd(data, size);
 	}
 
@@ -62,7 +77,7 @@ namespace G13 {
 		if (row == -1) {
 			row = cursor_row;
 			col = cursor_col;
-			cursor_col += _keypad.current_font().width();
+			cursor_col += current_font().width();
 			if (cursor_col >= G13_LCD_COLUMNS) {
 				cursor_col = 0;
 				if (++cursor_row >= G13_LCD_TEXT_ROWS) {
@@ -73,11 +88,11 @@ namespace G13 {
 
 		unsigned offset = image_byte_offset(row * G13_LCD_TEXT_CHEIGHT, col); //*_keypad._current_font->_width );
 		if (text_mode) {
-			memcpy(&image_buf[offset], &_keypad.current_font().char_data(c).bits_inverted,
-				   _keypad.current_font().width());
+			memcpy(&image_buf[offset], &current_font().char_data(c).bits_inverted,
+				   current_font().width());
 		} else {
-			memcpy(&image_buf[offset], &_keypad.current_font().char_data(c).bits_regular,
-				   _keypad.current_font().width());
+			memcpy(&image_buf[offset], &current_font().char_data(c).bits_regular,
+				   current_font().width());
 		}
 	}
 
@@ -156,6 +171,14 @@ namespace G13 {
 			}
 		}
 		image_send();
+	}
+
+	FontPtr G13_LCD::switch_to_font(const std::string& name) {
+		FontPtr rv = _fonts[name];
+		if (rv) {
+			_current_font = rv;
+		}
+		return rv;
 	}
 } // namespace G13
 
