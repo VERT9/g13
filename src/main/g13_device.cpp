@@ -8,12 +8,14 @@
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 #include <linux/uinput.h>
+#include <set>
 #include <sstream>
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <vector>
-
+#include <pugixml.hpp>
+#include <wordexp.h>
 
 #include "container.h"
 #include "g13.h"
@@ -34,13 +36,21 @@ using Helper::repr;
 using std::to_string;
 
 namespace G13 {
-	G13_Device::G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long _id) :
+	G13_Device::G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long _id, std::string profiles_dir = "") :
 		_id_within_manager(_id),
 		handle(handle),
 		ctx(0),
 		_uinput_fid(-1),
 		_logger(std::move(logger)),
-		_lcd(*this, *_logger) {
+		_lcd(*this, *_logger),
+		_profiles_dir(std::move(profiles_dir)){
+
+		// Expand possible '~'
+		wordexp_t exp_result;
+		wordexp(_profiles_dir.c_str(), &exp_result, 0);
+		_profiles_dir = std::string(*(exp_result.we_wordv));
+		wordfree(&exp_result);
+
 		_current_profile = std::make_shared<G13_Profile>("default", "default");
 		_profiles["default"] = _current_profile;
 
@@ -601,6 +611,13 @@ namespace G13 {
 			lcd().image_send();
 		};
 
+		_command_table["reload_profile"] = [this](const char *remainder) {
+			std::string profile;
+			if ((remainder != nullptr) && (remainder[0] == '\0'))
+				advance_ws(remainder, profile);
+			reload_profile(profile);
+		};
+
 		/* TODO add more commands
 		 * New command template:
 			_command_table[""] = [this](const char *remainder) {
@@ -686,5 +703,134 @@ namespace G13 {
 
 	void G13_Device::display_app() {
 		this->_apps[this->current_app]->display(*this);
+	}
+
+	void G13_Device::init_profiles() {
+		// Make the directory if it doesn't exist
+		std::filesystem::create_directories(_profiles_dir);
+
+		// Load all profiles in directory into current device
+		for (const auto& entry: std::filesystem::directory_iterator(_profiles_dir)) {
+			load_profile(entry.path());
+		}
+	}
+
+	void G13_Device::load_profile(const std::string& filename) {
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load_file(filename.c_str());
+		if (!result) {
+			_logger->warning(std::string ("Profile can not be read: ").append(filename));
+			return;
+		}
+
+		std::string name = doc.select_node("/profiles/profile").node().attribute("name").value();
+		std::string guid = doc.select_node("/profiles/profile").node().attribute("guid").value();
+		_logger->info(std::format("{}: {}", guid, name));
+		ProfilePtr profile = this->profile(guid, name);
+
+		pugi::xpath_node_set assignments = doc.select_nodes("/profiles/profile/assignments[@devicecategory='Logitech.Gaming.LeftHandedController']/assignment[@backup='false']");
+
+		for (auto node : assignments) {
+			// Find G Key
+			std::string keyname = node.node().attribute("contextid").value();
+			// TODO stick zones are dynamic and troublesome for this
+			// keymap for converting from Logitech -> g13/key
+			std::map<std::string, std::string> gkey_convert_map = {
+					{"G23", "LEFT"},
+					{"G24", "DOWN"},
+					{"G25", "TOP"},
+					{"G26", "STICK_UP"},
+					{"G27", "STICK_RIGHT"},
+					{"G28", "STICK_DOWN"},
+					{"G29", "STICK_LEFT"}
+			};
+			if (gkey_convert_map.count(keyname) > 0)
+				keyname = gkey_convert_map.at(keyname);
+
+			// Find Keystroke
+			// keymap for converting from Logitech -> linux/input
+			std::map<std::string, std::string> key_convert_map = {
+					{"SPACEBAR", "SPACE"},
+					{"LSHIFT", "LEFTSHIFT"},
+					{"RSHIFT", "RIGHTSHIFT"},
+					{"LCTRL", "LEFTCTRL"},
+					{"RCTRL", "RIGHTCTRL"},
+					{"LALT", "LEFTALT"},
+					{"RALT", "RIGHTALT"},
+					{"LBRACKET", "LEFTBRACE"},
+					{"RBRACKET", "RIGHTBRACE"},
+					{"ESCAPE", "ESC"}
+			};
+
+			// TODO handle key direction and timings
+			// Get macro from XML
+			std::string macroguid = node.node().attribute("macroguid").value();
+			std::string macro_query = "/profiles/profile/macros/macro[@guid='"+macroguid+"']";
+			pugi::xpath_node_set macro = doc.select_nodes(macro_query.c_str());
+
+			std::string action;
+			for(auto keyset : macro) {
+				// Check for support: only multikey and keystroke elements for now
+				auto keys = keyset.node().first_child();
+				if (strcmp(keys.name(), "multikey") != 0 and strcmp(keys.name(), "keystroke") != 0) {
+					_logger->warning(std::format("Macro not supported: {}", keys.name()));
+					continue;
+				}
+
+				// Gather unique keys only
+				std::set<std::string> unique_keys;
+				for (auto keystroke : keys.children("key")) {
+					// Extract value and add to set
+					unique_keys.emplace(keystroke.attribute("value").value());
+				}
+
+				// Build action
+				for (auto key : unique_keys) {
+					// Convert if necessary
+					if (key_convert_map.count(key) > 0)
+						key = key_convert_map.at(key);
+
+					// Add prefix
+					key.insert(0, "KEY_");
+
+					// Add operator
+					if (!action.empty())
+						action += "+";
+
+					// Add keystroke
+					action += key;
+				}
+			}
+
+			// Bind keys to actions
+			try {
+				if (auto gkey = profile->find_key(keyname)) {
+					vector<std::string> excluded {"BD", "L1", "L2", "L3", "L4"};
+					if (ranges::find(excluded, keyname) == excluded.end())
+						gkey->set_action(make_action(action));
+				} else if (auto stick_key = stick().zone(keyname)) {
+					stick_key->set_action(make_action(action));
+				} else {
+					_logger->warning("bind key " + keyname + " unknown");
+				}
+				_logger->debug(std::format("bind {} [{}]", keyname, action));
+			} catch (const std::exception& ex) {
+				_logger->error(std::format("bind {} [{}] failed : {}", keyname, action, ex.what()));
+			}
+		}
+	}
+
+	void G13_Device::reload_profile(const std::string& id) {
+		if (id.empty()) {
+			_logger->info(std::format("Reloading all profiles in: {}", _profiles_dir));
+			// Remove all profiles
+			_profiles.clear();
+			// reload all profiles
+			init_profiles();
+		} else if (_profiles.find(id) != _profiles.end()) {
+			auto filepath = std::format("{}/{}.xml", _profiles_dir, id);
+			_logger->info(std::format("Reloading profile: {}", filepath));
+			load_profile(filepath);
+		}
 	}
 }
