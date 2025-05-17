@@ -2,6 +2,7 @@
 // Created by vert9 on 11/23/24.
 //
 
+#include <fstream>
 #include "G13_DisplayApp.h"
 #include "g13_device.h"
 #include "g13_keys.h"
@@ -95,10 +96,14 @@ namespace G13 {
 			}));
 		}
 
-		// Do nothing for L3
+		// L3: Reload profile
 		if (auto gkey = device.current_profile().find_key("L3")) {
 			gkey->set_action(std::make_shared<G13_Action_Dynamic>(_logger, _keymap, [&] {
-				// Do Nothing
+				// Get list of profiles, formatted in indexable vector
+				std::map<std::string, ProfilePtr> profiles = device.get_profiles();
+				std::vector<std::pair<std::string, ProfilePtr>> p(profiles.begin(), profiles.end());
+				// Reload highlighted profile
+				device.reload_profile(p[selected_profile].first);
 			}));
 		}
 
@@ -137,9 +142,94 @@ namespace G13 {
 		}
 
 		// Show button prompts
-		device.lcd().text_mode = 1;
-		device.lcd().write_pos(4, 0);
-		device.lcd().write_string("   UP   |  DOWN  |      |   *   ", false);
+		// Fill background of bottom row
+		for (int x = 0; x < 160; x++) {
+			for (int y = 35; y < 42; y++) {
+				device.lcd().image_setpixel(y,x);
+			}
+		}
+
+		// Dividers
+		device.lcd().image_clearpixel(35,40);
+		device.lcd().image_clearpixel(36,40);
+		device.lcd().image_clearpixel(37,40);
+		device.lcd().image_clearpixel(38,40);
+		device.lcd().image_clearpixel(39,40);
+		device.lcd().image_clearpixel(40,40);
+		device.lcd().image_clearpixel(41,40);
+		device.lcd().image_clearpixel(42,40);
+
+		device.lcd().image_clearpixel(35,80);
+		device.lcd().image_clearpixel(36,80);
+		device.lcd().image_clearpixel(37,80);
+		device.lcd().image_clearpixel(38,80);
+		device.lcd().image_clearpixel(39,80);
+		device.lcd().image_clearpixel(40,80);
+		device.lcd().image_clearpixel(41,80);
+		device.lcd().image_clearpixel(42,80);
+
+		device.lcd().image_clearpixel(35,120);
+		device.lcd().image_clearpixel(36,120);
+		device.lcd().image_clearpixel(37,120);
+		device.lcd().image_clearpixel(38,120);
+		device.lcd().image_clearpixel(39,120);
+		device.lcd().image_clearpixel(40,120);
+		device.lcd().image_clearpixel(41,120);
+		device.lcd().image_clearpixel(42,120);
+
+		// Up
+		device.lcd().image_clearpixel(37,20);
+		device.lcd().image_clearpixel(38,19);
+		device.lcd().image_clearpixel(38,21);
+		device.lcd().image_clearpixel(39,18);
+		device.lcd().image_clearpixel(39,22);
+		device.lcd().image_clearpixel(40,17);
+		device.lcd().image_clearpixel(40,23);
+
+		// Down
+		device.lcd().image_clearpixel(37,57);
+		device.lcd().image_clearpixel(37,63);
+		device.lcd().image_clearpixel(38,58);
+		device.lcd().image_clearpixel(38,62);
+		device.lcd().image_clearpixel(39,59);
+		device.lcd().image_clearpixel(39,61);
+		device.lcd().image_clearpixel(40,60);
+
+		// Reload
+		device.lcd().image_clearpixel(36,97);
+		device.lcd().image_clearpixel(37,96);
+		device.lcd().image_clearpixel(37,97);
+		device.lcd().image_clearpixel(37,98);
+		device.lcd().image_clearpixel(38,95);
+		device.lcd().image_clearpixel(38,97);
+		device.lcd().image_clearpixel(38,99);
+		device.lcd().image_clearpixel(39,97);
+		device.lcd().image_clearpixel(40,97);
+		device.lcd().image_clearpixel(41,97);
+
+		device.lcd().image_clearpixel(36,103);
+		device.lcd().image_clearpixel(37,103);
+		device.lcd().image_clearpixel(38,103);
+		device.lcd().image_clearpixel(39,101);
+		device.lcd().image_clearpixel(39,103);
+		device.lcd().image_clearpixel(39,105);
+		device.lcd().image_clearpixel(40,102);
+		device.lcd().image_clearpixel(40,103);
+		device.lcd().image_clearpixel(40,104);
+		device.lcd().image_clearpixel(41,103);
+
+		// Select
+		device.lcd().image_clearpixel(37,140);
+		device.lcd().image_clearpixel(37,142);
+		device.lcd().image_clearpixel(38,141);
+		device.lcd().image_clearpixel(39,139);
+		device.lcd().image_clearpixel(39,140);
+		device.lcd().image_clearpixel(39,141);
+		device.lcd().image_clearpixel(39,142);
+		device.lcd().image_clearpixel(39,143);
+		device.lcd().image_clearpixel(40,141);
+		device.lcd().image_clearpixel(41,140);
+		device.lcd().image_clearpixel(41,142);
 
 		// Send image to screen
 		device.lcd().image_send();

@@ -45,7 +45,7 @@ namespace G13 {
 
 	class G13_Device {
 	public:
-		G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long id);
+		G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long id, std::string profiles_dir);
 		~G13_Device();
 
 		G13_Device& init();
@@ -93,6 +93,20 @@ namespace G13 {
 
 		G13_Profile& current_profile() { return *_current_profile; }
 		std::map<std::string, ProfilePtr> get_profiles() { return _profiles; }
+		/**
+		 * @brief Loads all profile XML files in the currently configured profile directory
+		 */
+		void init_profiles();
+		/**
+		 * @brief Loads the specified XML profile file. Duplicate profile IDs will be overwritten.
+		 * @param filename file path to the XML profile to load
+		 */
+		void load_profile(const std::string& filename);
+		/**
+		 * @brief Reloads the specified XML profile file. If no filepath is specified, all profiles will be reloaded.
+		 * @param filename file path to the XML profile to load, or null
+		 */
+		void reload_profile(const std::string& filename = nullptr);
 
 		int id_within_manager() const { return _id_within_manager; }
 
@@ -147,6 +161,7 @@ namespace G13 {
 		std::shared_ptr<G13_Log> _logger;
 		G13_LCD _lcd;
 		std::shared_ptr<G13_Stick> _stick;
+		std::string _profiles_dir;
 
 		bool keys[G13_NUM_KEYS];
 

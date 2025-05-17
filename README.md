@@ -9,20 +9,33 @@ from [khampf's](https://github.com/khampf/g13) fork as well.
 Built with Boost v1.83.0.2+b2
 
 ## Install
+
+The following commands will build the code and install the app:
+
 ```shell
 cd /path/to/project/dir
 sudo cmake --build ./cmake-build-debug --target install
 ```
 
+The install will copy the following files:
+- `g13d` into `/usr/local/bin`
+- `pbm2lpbm` into `/usr/local/bin`
+- `g13.service` into `/usr/lib/systemd/user`
+- `71-g13.rules` into `/usr/lib/udev/rules.d`
+
 ### Running as a service
 
-A sample system config has been added in `/systemd` of the project. Copy this to your `/usr/lib/systemd/system`
-directory and run the following:
+A sample system config has been added in `/systemd` of the project. You will need to run the following on first install 
+or if the unit file is changed:
 
 ```shell
-sudo systemctl enable g13d.service # ensures daemon is started after reboot
-sudo systemctl start g13d.service
+# Ensure changes are loaded into systemctl
+systemctl --user daemon-reload
+# Enable and start the service
+systemctl --user enable --now g13d.service
 ```
+
+The service is current set up as a user service and will start up the app when a user logs into the system.
 
 ## OLD DOCUMENTATION FOLLOWS
 
@@ -192,7 +205,7 @@ Sets the text mode to *mode*, current options are 0 (normal) or 1 (inverted)
 Resends the LCD buffer
 
 ### profile *profile_id*
-    
+
 Selects *profile_id* to be the current profile, it if it doesn't exist creating it as a copy of the current profile.
 
 All key binding changes (from the bind command) are made on the current profile.
@@ -200,7 +213,12 @@ All key binding changes (from the bind command) are made on the current profile.
 Your existing Logitech profiles from Windows can be loaded on boot. Just added them to your `profiles_dir` specified on
 boot, default is `~/.g13d/profiles`. Loaded profiles are keyed by their GUID located in the filename as well as
 in `profile -> guid` attribute inside the file. The current profile name and date/time will be displayed on the screen.
-  
+
+### reload_profile *[profile_id]*
+
+Reloads the profile loaded at the specified ID. The `profile_id` is optional. If no ID is specified, all profiles in the
+`profiles_dir` will be reloaded.
+
 ### font *font_name*   
 
 Switch font, current options are ***8x8*** and ***5x8***    
