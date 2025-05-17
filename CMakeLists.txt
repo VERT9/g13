@@ -44,4 +44,6 @@ add_executable(g13d ${SRC_FILES})
 target_link_libraries (g13d usb-1.0 ${Boost_LIBRARIES} evdev pthread pugixml)
 
 # Install
-install(TARGETS g13d pbm2lpbm DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
+install(TARGETS g13d pbm2lpbm DESTINATION /usr/local/bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+install(FILES systemd/g13.service DESTINATION /usr/lib/systemd/user)
+install(FILES 71-g13.rules DESTINATION /usr/lib/udev/rules.d)
