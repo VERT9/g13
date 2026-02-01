@@ -32,7 +32,7 @@ or if the unit file is changed:
 # Ensure changes are loaded into systemctl
 systemctl --user daemon-reload
 # Enable and start the service
-systemctl --user enable --now g13d.service
+systemctl --user enable --now g13.service
 ```
 
 The service is current set up as a user service and will start up the app when a user logs into the system.
