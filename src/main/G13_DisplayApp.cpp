@@ -113,6 +113,10 @@ namespace G13 {
 				// Get list of profiles, formatted in indexable vector
 				std::map<std::string, ProfilePtr> profiles = device.get_profiles();
 				std::vector<std::pair<std::string, ProfilePtr>> p(profiles.begin(), profiles.end());
+				// Sort vector by profile name (should match order they are displayed in)
+				std::sort(p.begin(), p.end(), [](const pair<std::string, ProfilePtr>& a, const pair<std::string, ProfilePtr>& b) {
+					return a.second->name() < b.second->name(); // Ascending order for first element
+				});
 				// Switch profile
 				device.switch_to_profile(p[selected_profile].first);
 				// Reinit app to reapply LIGHT keys
@@ -132,6 +136,10 @@ namespace G13 {
 		device.lcd().text_mode = 0;
 		std::map<std::string, ProfilePtr> profiles = device.get_profiles();
 		std::vector<std::pair<std::string, ProfilePtr>> p(profiles.begin(), profiles.end());
+		// Sort vector by profile name (should match order used to select via on-screen buttons)
+		std::sort(p.begin(), p.end(), [](const pair<std::string, ProfilePtr>& a, const pair<std::string, ProfilePtr>& b) {
+			return a.second->name() < b.second->name(); // Ascending order for first element
+		});
 		for (int i = 0; i < 4; i++) {
 			device.lcd().write_pos(i, 0);
 			char profile_name[32];
