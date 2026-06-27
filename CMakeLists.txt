@@ -9,9 +9,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-# Boost
-find_package(Boost 1.83.0 COMPONENTS log system program_options REQUIRED)
-
 ############################
 # External Libraries (begin)
 ############################
@@ -41,7 +38,7 @@ add_executable(pbm2lpbm src/pbm2lpbm/pbm2lpbm.cpp)
 include_directories(./src/main)
 file(GLOB_RECURSE SRC_FILES "./src/main/*.h" "./src/main/*.hpp" "./src/main/*.cc" "./src/main/*.cpp")
 add_executable(g13d ${SRC_FILES})
-target_link_libraries (g13d usb-1.0 ${Boost_LIBRARIES} evdev pthread pugixml)
+target_link_libraries (g13d usb-1.0 evdev pthread pugixml)
 
 # Install
 install(TARGETS g13d pbm2lpbm DESTINATION /usr/local/bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

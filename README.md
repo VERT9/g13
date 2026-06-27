@@ -6,8 +6,6 @@ This is a fork of [ecraven's g13 driver](https://github.com/ecraven/g13). It's b
 hopefully) to easily modify profiles while running. Some ideas were also taken
 from [khampf's](https://github.com/khampf/g13) fork as well.
 
-Built with Boost v1.83.0.2+b2
-
 ## Install
 
 The following commands will build the code and install the app:
@@ -41,12 +39,11 @@ The service is current set up as a user service and will start up the app when a
 
 ## Installation
 
-Make sure you have boost and libusb-1.0 installed.
+Make sure you have libusb-1.0 installed.
 
 ### For Ubuntu (15.10)
 
 * ***sudo apt-get install libusb-1.0-0-dev***
-* ***sudo apt-get install libboost-all-dev***
 
 
 ### Build
