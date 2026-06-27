@@ -6,15 +6,15 @@ This is a fork of [ecraven's g13 driver](https://github.com/ecraven/g13). It's b
 hopefully) to easily modify profiles while running. Some ideas were also taken
 from [khampf's](https://github.com/khampf/g13) fork as well.
 
-Built with Boost v1.83.0.2+b2
-
 ## Install
 
 The following commands will build the code and install the app:
 
 ```shell
 cd /path/to/project/dir
-sudo cmake --build ./cmake-build-debug --target install
+cmake -S . -B ./cmake-build-debug
+cmake --build ./cmake-build-debug
+sudo cmake --install ./cmake-build-debug
 ```
 
 The install will copy the following files:
@@ -35,18 +35,17 @@ systemctl --user daemon-reload
 systemctl --user enable --now g13.service
 ```
 
-The service is current set up as a user service and will start up the app when a user logs into the system.
+The service is currently set up as a user service and will start up the app when a user logs into the system.
 
 ## OLD DOCUMENTATION FOLLOWS
 
 ## Installation
 
-Make sure you have boost and libusb-1.0 installed.
+Make sure you have libusb-1.0 installed.
 
 ### For Ubuntu (15.10)
 
 * ***sudo apt-get install libusb-1.0-0-dev***
-* ***sudo apt-get install libboost-all-dev***
 
 
 ### Build
@@ -92,14 +91,14 @@ that is good. This also shows you which name the keys on the G13 have, and what 
 
 The following options can be used when starting g13d
 
-| Option              | Description                                     | Default          |
-|---------------------|-------------------------------------------------|------------------|
-| --help              | show help                                       |                  |
-| --logo *arg*        | set logo from file                              |                  |
-| --config *arg*      | load config commands from file                  |                  |
-| --pipe_in *arg*     | specify directory name for input pipe           | /tmp/g13/in/0    |
-| --pipe_out *arg*    | specify directory name for output pipe          | /tmp/g13/out/0   |
-| --profile_dir *arg* | specify directory for reading Logitech profiles | ~/.g13d/profiles |
+| Option               | Description                                     | Default                                          |
+|----------------------|-------------------------------------------------|--------------------------------------------------|
+| --help               | show help                                       |                                                  |
+| --logo *arg*         | set logo from file                              |                                                  |
+| --config *arg*       | load config commands from file                  |                                                  |
+| --pipe_in *arg*      | specify base name for input pipe                | `$XDG_RUNTIME_DIR/g13/in/0` or `/tmp/g13/in/0`   |
+| --pipe_out *arg*     | specify base name for output pipe               | `$XDG_RUNTIME_DIR/g13/out/0` or `/tmp/g13/out/0` |
+| --profiles_dir *arg* | specify directory for reading Logitech profiles | ~/.g13d/profiles                                 |
 
 ## Configuring / Remote Control
 
@@ -107,10 +106,10 @@ Configuration is accomplished using the commands described in the [Commands] sec
 
 Commands can be loaded from a file specified by the `--config` option on the command line.  
 
-Commands can be also be sent to the command input pipe, which is at ***/tmp/g13/in/0*** by 
+Commands can be also be sent to the command input pipe, which is at ***$XDG_RUNTIME_DIR/g13/in/0*** by 
 default. Example:
 
-    echo rgb 0 255 0 > /tmp/g13-0
+    echo rgb 0 255 0 > "$XDG_RUNTIME_DIR/g13/in/0"
 
 When running with the `--pipe_in` or `--pipe_out` option, your file will be appended with `-0-in` or `-0-out` where `0`
 is the internal ID of your device to avoid conflicts if multiple devices are connected.
@@ -120,7 +119,7 @@ is the internal ID of your device to avoid conflicts if multiple devices are con
 Various parts of configuring the G13 depend on assigning actions to occur based on something happening to the G13. 
 * key, possible values shown upon startup  (e.g. ***KEY_LEFTSHIFT***).
 * multiple keys,  like ***KEY_LEFTSHIFT+KEY_F1***
-* pipe output, by using ">" followed by text, as in ***>Hello*** - causing **Hello** (plus newline) to be written to the output pipe ( **/tmp/g13/out/0** by default )
+* pipe output, by using ">" followed by text, as in ***>Hello*** - causing **Hello** (plus newline) to be written to the output pipe ( **$XDG_RUNTIME_DIR/g13/out/0** by default )
 * command, by using "!" followed by text, as in ***!stick_mode KEYS*** 
 
 ## Commands
@@ -233,7 +232,7 @@ Changes the level of detail written to the g13d console
 
 ### LCD display
 
-Use pbm2lpbm to convert a pbm image to the correct format, then just cat that into the pipe (cat starcraft2.lpbm > /tmp/g13-0).
+Use pbm2lpbm to convert a pbm image to the correct format, then just cat that into the pipe (`cat starcraft2.lpbm > "$XDG_RUNTIME_DIR/g13/in/0"`).
 The pbm file must be 160x43 pixels.
 
 ## License

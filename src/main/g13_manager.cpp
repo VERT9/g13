@@ -54,7 +54,7 @@ namespace G13 {
 					return;
 				}
 
-				auto profile_dir = string_config_value("profile_dir", "~/.g13d/profiles");
+				auto profile_dir = string_config_value("profiles_dir", "~/.g13d/profiles");
 				auto device = new G13_Device(_logger, handle, g13s.size(), profile_dir);
 				g13s.push_back(device);
 				g13s.back()->init();
