@@ -22,8 +22,8 @@ namespace {
 	const std::vector<StringOption> string_options = {
 		{"logo", "set logo from file"},
 		{"config", "load config commands from file"},
-		{"pipe_in", "specify name for input pipe; default is '/tmp/g13-0'"},
-		{"pipe_out", "specify name for output pipe; default is '/tmp/g13-0_out'"},
+		{"pipe_in", "specify base name for input pipe"},
+		{"pipe_out", "specify base name for output pipe"},
 		{"log_level", "logging level; default is 'info'"},
 		{"profiles_dir", "profiles directory; default is '~/.g13d/profiles'"},
 	};

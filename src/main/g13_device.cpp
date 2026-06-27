@@ -3,6 +3,9 @@
 //
 
 #include <fcntl.h>
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -11,6 +14,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <system_error>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <vector>
@@ -36,6 +40,18 @@ using Helper::repr;
 using std::to_string;
 
 namespace G13 {
+	namespace {
+		/**
+		 * @brief Returns a user-owned runtime directory for default FIFO files.
+		 */
+		std::string default_pipe_root() {
+			if (const char* runtime_dir = std::getenv("XDG_RUNTIME_DIR"); runtime_dir != nullptr && runtime_dir[0] != '\0') {
+				return std::string(runtime_dir) + "/g13";
+			}
+			return "/tmp/g13";
+		}
+	}
+
 	G13_Device::G13_Device(std::shared_ptr<G13_Log> logger, libusb_device_handle* handle, unsigned long _id, std::string profiles_dir = "") :
 		_id_within_manager(_id),
 		handle(handle),
@@ -143,14 +159,29 @@ namespace G13 {
 		path = (std::string::npos == pos) ? "" : path.substr(0, pos);
 		// Create the path if not empty
 		if (!path.empty()) {
-			std::filesystem::create_directories(path);
+			std::error_code error;
+			std::filesystem::create_directories(path, error);
+			if (error) {
+				_logger->error("failed creating pipe directory " + repr(path).s + ": " + error.message());
+				return -1;
+			}
 		}
 
-		// mkfifo(g13->fifo_name(), 0777); - didn't work
-		mkfifo(fifo_name, 0666);
-		chmod(fifo_name, 0777);
+		if (mkfifo(fifo_name, 0666) != 0 && errno != EEXIST) {
+			_logger->error("failed creating pipe " + repr(fifo_name).s + ": " + std::strerror(errno));
+			return -1;
+		}
 
-		return open(fifo_name, O_RDWR | O_NONBLOCK);
+		if (chmod(fifo_name, 0777) != 0) {
+			_logger->error("failed setting pipe permissions for " + repr(fifo_name).s + ": " + std::strerror(errno));
+			return -1;
+		}
+
+		const int fifo = open(fifo_name, O_RDWR | O_NONBLOCK);
+		if (fifo == -1) {
+			_logger->error("failed opening pipe " + repr(fifo_name).s + ": " + std::strerror(errno));
+		}
+		return fifo;
 	}
 
 	std::string G13_Device::describe_libusb_error_code(int code) {
@@ -274,7 +305,7 @@ namespace G13 {
 
 		// Set base directory if one is not supplied
 		if (config_base.empty()) {
-			return std::format("/tmp/g13/{}/{}", direction, id_within_manager());
+			return std::format("{}/{}/{}", default_pipe_root(), direction, id_within_manager());
 		}
 
 		return std::format("{}-{}-{}", config_base, id_within_manager(), direction);

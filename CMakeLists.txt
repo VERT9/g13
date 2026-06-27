@@ -20,6 +20,7 @@ FetchContent_Declare(
         GIT_SHALLOW TRUE
         GIT_PROGRESS ON
         SYSTEM
+        EXCLUDE_FROM_ALL
 )
 # more `FetchContent_Declare`s (if any). They should all be declared
 # before any calls to FetchContent_Make_available (see docs for why).
