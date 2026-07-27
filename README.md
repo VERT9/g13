@@ -20,8 +20,42 @@ sudo cmake --install ./cmake-build-debug
 The install will copy the following files:
 - `g13d` into `/usr/local/bin`
 - `pbm2lpbm` into `/usr/local/bin`
+- `g13_profile_editor` into `/usr/local/bin`
+- `g13-profile-editor.desktop` into `/usr/local/share/applications`
+- `g13-profile-editor.png` into `/usr/local/share/icons/hicolor/256x256/apps`
 - `g13.service` into `/usr/lib/systemd/user`
 - `71-g13.rules` into `/usr/lib/udev/rules.d`
+
+### Profile editor
+
+The build includes a Dear ImGui profile editor by default. It can be disabled at configure time with
+`-DBUILD_G13_EDITOR=OFF`.
+
+After installing, start it from the desktop launcher named `G13 Profile Editor` or run:
+
+```shell
+g13_profile_editor
+```
+
+The editor stores its settings in `$XDG_CONFIG_HOME/g13/profile_editor.ini`, or
+`~/.config/g13/profile_editor.ini` when `XDG_CONFIG_HOME` is not set. The profile options window lets you configure:
+
+| Setting               | Description                                                                                                       |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------|
+| Profile Directory     | Directory containing Logitech profile XML files. This should match `g13d --profiles_dir`.                         |
+| Daemon Pipe           | Command FIFO used to reload or activate profiles. The default is `$XDG_RUNTIME_DIR/g13/in/0`, or `/tmp/g13/in/0`. |
+| Activate after reload | When enabled, Save + Reload also sends the daemon a profile activation command.                                   |
+
+Run `g13d` first, either directly or through the user service, so reload and activate commands have a daemon to talk to.
+The editor can still create and edit XML files while the daemon is stopped, but reload and activation commands will fail.
+
+Typical workflow:
+
+1. Open profile options and set Profile Directory to the same directory used by `g13d`.
+2. Select an XML profile from the profile list, or create/copy one with the profile buttons.
+3. Add or edit macros in the macro column.
+4. Drag macros onto G13 buttons, or select a button and choose a macro from the assignment combo.
+5. Save the profile, then use Save + Reload or Activate to update the running daemon.
 
 ### Running as a service
 
