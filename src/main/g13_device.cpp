@@ -43,12 +43,33 @@ namespace G13 {
 	namespace {
 		/**
 		 * @brief Returns a user-owned runtime directory for default FIFO files.
+		 * @return runtime directory used for default FIFO files.
 		 */
 		std::string default_pipe_root() {
 			if (const char* runtime_dir = std::getenv("XDG_RUNTIME_DIR"); runtime_dir != nullptr && runtime_dir[0] != '\0') {
 				return std::string(runtime_dir) + "/g13";
 			}
 			return "/tmp/g13";
+		}
+
+		/**
+		 * @brief Extracts and trims the command argument after a command name.
+		 * @param remainder raw command tail, or nullptr when absent.
+		 * @return trimmed command argument, or an empty string when absent.
+		 */
+		std::string command_argument(const char* remainder) {
+			if (remainder == nullptr) {
+				return {};
+			}
+
+			std::string argument(remainder);
+			const auto first = argument.find_first_not_of(" \t\r\n");
+			if (first == std::string::npos) {
+				return {};
+			}
+
+			const auto last = argument.find_last_not_of(" \t\r\n");
+			return argument.substr(first, last - first + 1);
 		}
 	}
 
@@ -476,10 +497,22 @@ namespace G13 {
 		return lcd().switch_to_font(name);
 	}
 
-	void G13_Device::switch_to_profile(const std::string& name) {
-		if (_current_profile->name() != name){
-			_current_profile = profile(name);
-			_logger->info("Profile switched to: " + name);
+	void G13_Device::switch_to_profile(const std::string& id) {
+		if (id.empty()) {
+			_logger->warning("Ignoring empty profile switch request");
+			return;
+		}
+
+		if (!_profiles.contains(id)) {
+			const auto filepath = std::format("{}/{}.xml", _profiles_dir, id);
+			if (std::filesystem::exists(filepath)) {
+				load_profile(filepath);
+			}
+		}
+
+		if (_current_profile->guid() != id) {
+			_current_profile = profile(id);
+			_logger->info("Profile switched to: " + _current_profile->name() + " (" + id + ")");
 		}
 	}
 
@@ -549,7 +582,7 @@ namespace G13 {
 		};
 
 		_command_table["profile"] = [this](const char* remainder) {
-			switch_to_profile(remainder);
+			switch_to_profile(command_argument(remainder));
 		};
 
 		_command_table["font"] = [this](const char* remainder) {
@@ -643,10 +676,7 @@ namespace G13 {
 		};
 
 		_command_table["reload_profile"] = [this](const char *remainder) {
-			std::string profile;
-			if ((remainder != nullptr) && (remainder[0] == '\0'))
-				advance_ws(remainder, profile);
-			reload_profile(profile);
+			reload_profile(command_argument(remainder));
 		};
 
 		/* TODO add more commands
@@ -757,7 +787,11 @@ namespace G13 {
 		std::string name = doc.select_node("/profiles/profile").node().attribute("name").value();
 		std::string guid = doc.select_node("/profiles/profile").node().attribute("guid").value();
 		_logger->info(std::format("{}: {}", guid, name));
-		ProfilePtr profile = this->profile(guid, name);
+		ProfilePtr profile = std::make_shared<G13_Profile>(guid, name);
+		_profiles[guid] = profile;
+		if (_current_profile && _current_profile->guid() == guid) {
+			_current_profile = profile;
+		}
 
 		pugi::xpath_node_set assignments = doc.select_nodes("/profiles/profile/assignments[@devicecategory='Logitech.Gaming.LeftHandedController']/assignment[@backup='false']");
 
@@ -858,10 +892,14 @@ namespace G13 {
 			_profiles.clear();
 			// reload all profiles
 			init_profiles();
-		} else if (_profiles.find(id) != _profiles.end()) {
+		} else {
 			auto filepath = std::format("{}/{}.xml", _profiles_dir, id);
-			_logger->info(std::format("Reloading profile: {}", filepath));
-			load_profile(filepath);
+			if (std::filesystem::exists(filepath)) {
+				_logger->info(std::format("Reloading profile: {}", filepath));
+				load_profile(filepath);
+			} else {
+				_logger->warning(std::format("Profile file not found for reload: {}", filepath));
+			}
 		}
 	}
 }
